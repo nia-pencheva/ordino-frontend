@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
+    "noImplicitAny": false,
+    "allowJs": true,
+    "target": "es2022",
+    "module": "es2022",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -13,17 +14,16 @@
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "types": [
       "webpack-env"
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     "lib": [
-      "esnext",
+      "ES2022",
       "dom",
       "dom.iterable",
       "scripthost"
