@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="login-form__view">
         <LoginForm />
     </div>
 </template>
@@ -8,10 +8,13 @@
     import LoginForm from '@/components/auth/LoginForm.vue';
 </script>
 
-<style lang="scss" scoped>
-    div {
+<style lang="scss">
+    .login-form__view {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
+        width: 100vw;
+        padding: 20px;
     }
 </style>
