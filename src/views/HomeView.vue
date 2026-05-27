@@ -1,8 +1,10 @@
 <template>
+    <NavSidebar />
     <TheNav />
 </template>
 
 <script setup lang="ts">
-import TheNav from '@/components/layout/TheNav.vue';
+import NavSidebar from '@/components/layout/nav/NavSidebar.vue';
+import TheNav from '@/components/layout/nav/TheNav.vue';
 
 </script>
