@@ -47,7 +47,6 @@
     import router from '@/router';
     import { useAuth } from '@/store/auth/auth';
     import { computed, onMounted, onUnmounted, ref } from 'vue';
-    import { UnauthorizedError } from '@/service/api/models/response-errors';
 
     // Components
     import TheWindow from '../base/TheWindow.vue';
@@ -75,14 +74,15 @@
     // Functions
     async function handleLogin() {
         try {
-            auth.login({
-                    username: username.value,
-                    password: password.value
-                })
-                .then(() => router.replace('/'));
+            await auth.login({
+                username: username.value,
+                password: password.value
+            });
+            
+            router.replace('/');
         }
         catch(error: any) {
-            if(error instanceof UnauthorizedError) {
+            if(error.message == "INVALID_CREDENTIALS") {
                 loginError.value = "Wrong credentials";
             }
         }
