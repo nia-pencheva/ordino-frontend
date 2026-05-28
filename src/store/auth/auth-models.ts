@@ -6,6 +6,12 @@ export interface LoginRequest extends Record<string, unknown> {
 export interface LoginResponse {
     user: User
     token: string
+    refreshToken: string
+}
+
+export interface RefreshResponse {
+    token: string
+    refreshToken: string
 }
 
 export class User {

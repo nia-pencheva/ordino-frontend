@@ -21,8 +21,8 @@
     // Store
     const auth = useAuth();
 
-    function handleLogout() {
-        auth.logout();
+    async function handleLogout() {
+        await auth.logout();
         router.replace("/login")
     }
 </script>
