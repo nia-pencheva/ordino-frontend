@@ -7,6 +7,7 @@ export interface LoginResponse {
     user: User
     token: string
     refreshToken: string
+    passwordChangeRequired: boolean
 }
 
 export interface RefreshResponse {
@@ -28,7 +29,7 @@ export class User {
     }
 
     static fromJSON(data: any): User {
-        return new User(data.name, data.roles);
+        return new User(data.username, data.name, data.roles);
     }
 }
 

@@ -5,9 +5,18 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "login",
-    component: () => import("@/views/LoginView.vue"),
+    component: () => import("@/views/auth/LoginView.vue"),
     meta: {
       guest: true
+    }
+  },
+  {
+    path: '/change-password',
+    name: 'change-password',
+    component: () => import("@/views/auth/ChangePasswordView.vue"),
+    meta: {
+      auth: true,
+      passwordRequiresChange: true
     }
   },
   {
@@ -29,7 +38,9 @@ router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: 
   const auth = useAuth();
 
   if(to.meta.auth && !auth.isAuthenticated) next("/login");
-  else if(to.meta.admin && !auth.user?.isAdmin()) return { name: 'Forbidden' };
+  else if (auth.passwordChangeRequired && to.name !== 'change-password') next({ name: 'change-password' });
+  else if (to.meta.passwordRequiresChange && !auth.passwordChangeRequired) next({ name: 'home' });
+  else if(to.meta.admin && !auth.user?.isAdmin()) next({ name: 'home' });
   else if(to.meta.guest && auth.isAuthenticated) next("/");
   else next();
 });

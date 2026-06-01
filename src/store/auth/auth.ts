@@ -2,7 +2,6 @@ import { LoginRequest, LoginResponse, RefreshResponse, User } from "@/store/auth
 import { APICall} from "@/service/api/api";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { ErrorResponse } from "@/service/api/models/response-errors";
 
 export const useAuth = defineStore("auth", () => {
     const storedUser = localStorage.getItem('authUser');
@@ -10,15 +9,12 @@ export const useAuth = defineStore("auth", () => {
     const user = ref<User | null>(storedUser !== null ? User.fromJSON(JSON.parse(storedUser)) : null);
     const token = ref<string | null>(localStorage.getItem('authToken'));
     const refreshToken = ref<string | null>(localStorage.getItem('authRefreshToken'));
+    const passwordChangeRequired = ref<boolean>(localStorage.getItem('passwordChangeRequired') === 'true');
 
     const isAuthenticated = computed(() => token.value !== null);
 
-    function getToken(): string | null {
-        return token.value;
-    }
-
     async function login(request: LoginRequest): Promise<void> {
-        const response = await fetchAPI<LoginResponse>('login', 'POST', request);
+        const response = await (new APICall<LoginResponse>('login', 'POST', request)).execute();
 
         token.value = response.token;
         refreshToken.value = response.refreshToken;
@@ -27,6 +23,13 @@ export const useAuth = defineStore("auth", () => {
         localStorage.setItem('authToken', token.value);
         localStorage.setItem('authRefreshToken', refreshToken.value);
         localStorage.setItem('authUser', JSON.stringify(user.value));
+
+        console.log(response);
+        if(response.passwordChangeRequired) {
+            passwordChangeRequired.value = true;
+            localStorage.setItem('passwordChangeRequired', 'true');
+            throw new Error("PASSWORD_CHANGE_REQUIRED");
+        }
     }
 
     async function refresh(): Promise<void> {
@@ -70,5 +73,10 @@ export const useAuth = defineStore("auth", () => {
         localStorage.removeItem('authUser');
     }
 
-    return { user, token, isAuthenticated, getToken, login, refresh, logout };
+    function markPasswordChanged() {
+        passwordChangeRequired.value = false;
+        localStorage.removeItem('passwordChangeRequired');
+    }
+
+    return { user, token, passwordChangeRequired, isAuthenticated, login, refresh, logout, markPasswordChanged };
 });

@@ -1,64 +1,63 @@
 <template>
-    <TheWindow style="width: 100%; max-width: 400px;">
-        <div class="login-form">
-            <h2>Login</h2>
+    <TheForm
+        class="login-form"
+        @enter-pressed="handleLogin"
+    >
+        <FormElement
+            id="username"
+        >
+            <template #label>Username</template>
+            <template #default="defaultProps">
+                <TextInput 
+                    v-model="username"
+                    :id="defaultProps.id"
+                    type="text"
+                    placeholder="Username"
+                />
+            </template>
+        </FormElement>
 
-            <div class="login-form__fields">
-                <div class="login-form__field__wrapper">
-                    <label for="username">Username</label>
-                    <TextInput 
-                        v-model="username"
-                        id="username"
-                        type="text"
-                        placeholder="Username"
-                    />
-                </div>
+        <FormElement
+            id="password"
+        >
+            <template #label>Password</template>
+            <template #default="defaultProps">
+                <TextInput 
+                    v-model="password"
+                    :id="defaultProps.id"
+                    type="password"
+                    placeholder="Password"
+                />
+            </template>
+        </FormElement>
 
-                <div class="login-form__field__wrapper">
-                    <label for="password">Password</label>
-                    <TextInput 
-                        v-model="password"
-                        id="password"
-                        type="password"
-                        placeholder="Password"
-                    />
-                </div>
-            </div>
+        <p 
+            v-if="hasLoginError"
+            class="login-form__wrong-credentials"    
+        >
+            {{ loginError }}
+        </p>
 
-            <p 
-                v-if="hasLoginError"
-                class="login-form__wrong-credentials"    
-            >
-                {{ loginError }}
-            </p>
-
-            <TheButton 
-                @click="handleLogin"
-                class="login-form__button"
-            >
-                Login
-            </TheButton>
-        </div>
-    </TheWindow>
+        <TheButton 
+            @click="handleLogin"
+            class="login-form__button"
+        >
+            Login
+        </TheButton>
+    </TheForm>
 </template>
 
 <script setup lang="ts">
     // Imports
     import router from '@/router';
     import { useAuth } from '@/store/auth/auth';
-    import { computed, onMounted, onUnmounted, ref } from 'vue';
+    import { computed, ref } from 'vue';
 
     // Components
-    import TheWindow from '../base/TheWindow.vue';
     import TheButton from '../base/TheButton.vue';
     import TextInput from '../base/TextInput.vue';
-
-    // Vars
-    let enterEventListener = (event: KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            handleLogin();
-        }
-    };
+    import TheForm from '../base/form/TheForm.vue';
+    import FormElement from '../base/form/FormElement.vue';
 
     // Store
     const auth = useAuth();
@@ -74,35 +73,31 @@
     // Functions
     async function handleLogin() {
         try {
-            await auth.login({
-                username: username.value,
-                password: password.value
-            });
-            
-            router.replace('/');
+            if(username.value.trim() != "" && password.value.trim() != "") {
+                await auth.login({
+                    username: username.value.trim(),
+                    password: password.value.trim()
+                });
+                
+                router.replace({ name: 'home' });   
+            }
         }
         catch(error: any) {
-            if(error.message == "INVALID_CREDENTIALS") {
-                loginError.value = "Wrong credentials";
+            switch(error.message) {
+                case "INVALID_CREDENTIALS":
+                    loginError.value = "Wrong credentials"
+                    break;
+                case "PASSWORD_CHANGE_REQUIRED":
+                    router.replace({ name: 'change-password' });
             }
         }
     }
-
-    // Lifecycle hooks
-    onMounted(() => {
-        document.addEventListener('keydown', enterEventListener);
-    });
-
-    onUnmounted(() => {
-        document.removeEventListener('keydown', enterEventListener);
-    });
 </script>
 
 <style lang="scss">
     .login-form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        width: 100%; 
+        max-width: 300px;
     }
 
     .login-form__fields {
@@ -121,7 +116,6 @@
     }
 
     .login-form__wrong-credentials {
-        margin: 0px 0px 20px;
         color: $fontColorError;
     }
 
