@@ -53,7 +53,7 @@
         width: 160px;
         background-color: $midGray;
         border-right: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 0px 8px 8px 0px;
+        border-radius: 0px 5px 5px 0px;
         padding: 10px 35px 10px 0px;
     }
 
