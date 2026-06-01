@@ -26,6 +26,46 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       auth: true
     }
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: () => import("@/views/users/UsersView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+  {
+    path: "/users/add",
+    name: "add-user",
+    component: () => import("@/views/users/AddUserView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+  {
+    path: "/users/:id",
+    name: "edit-user",
+    component: () => import("@/views/users/EditUserView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+{
+    path: "/recipes",
+    name: "recipes",
+    component: () => import("@/views/recipes/RecipesView.vue"),
+    meta: {
+      auth: true,
+    }
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: () => import("@/views/NotFoundView.vue")
   }
 ];
 
