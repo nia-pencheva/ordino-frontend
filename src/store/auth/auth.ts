@@ -1,5 +1,5 @@
 import { LoginRequest, LoginResponse, RefreshResponse, User } from "@/store/auth/auth-models";
-import { buildUrl, fetchAPI, parseResponseText } from "@/service/api/api";
+import { APICall} from "@/service/api/api";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { ErrorResponse } from "@/service/api/models/response-errors";
@@ -32,7 +32,7 @@ export const useAuth = defineStore("auth", () => {
     async function refresh(): Promise<void> {
         if (!refreshToken.value) throw new Error("No refresh token");
 
-        const response = await fetch(buildUrl("refresh"), {
+        const response = await fetch(APICall.buildUrl("refresh"), {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -41,10 +41,10 @@ export const useAuth = defineStore("auth", () => {
         });
 
         if(!response.ok) {
-            throw new Error((await response.json() as ErrorResponse).error); 
+            throw (await response.json()); 
         }
 
-        let data = parseResponseText<RefreshResponse>(await response.text());
+        let data =APICall.parseResponseText<RefreshResponse>(await response.text());
 
         token.value = data.token;
         refreshToken.value = data.refreshToken;
@@ -53,7 +53,7 @@ export const useAuth = defineStore("auth", () => {
     }
 
     async function logout(): Promise<void> {
-        await fetch(buildUrl("logout"), {
+        await fetch(APICall.buildUrl("logout"), {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
