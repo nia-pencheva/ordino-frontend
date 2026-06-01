@@ -24,7 +24,7 @@
         border-radius: 3px;
         padding: 3px 26px 3px 8px;
         height: 30px;
-        width: 230px;
+        width: 100%;
         border: 1px solid rgba(100, 130, 170, 0.55);
         background-color: #fff;
         color: #1a1a1a;

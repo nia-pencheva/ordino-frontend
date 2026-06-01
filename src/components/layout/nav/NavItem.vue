@@ -30,7 +30,6 @@
         gap: 5px;
         width: 100%;
         background: linear-gradient(#fff, #dcdcdc);
-        border-left: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
         padding: 10px;
     }

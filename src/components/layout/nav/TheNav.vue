@@ -1,7 +1,7 @@
 <template>
     <div class="the-nav__horizontal-strip">
-        <div></div>
-        <TheButton 
+        <NavBreadcrumbs />
+        <TheButton
             @click="handleLogout"
             class="the-nav__logout-button"
         >
@@ -17,6 +17,7 @@
 
     // Components
     import TheButton from '../../base/TheButton.vue';
+    import NavBreadcrumbs from './NavBreadcrumbs.vue';
 
     // Store
     const auth = useAuth();
@@ -29,15 +30,16 @@
 
 <style lang="scss">
     .the-nav__horizontal-strip {
-        position: fixed;
+        @include glass-texture;
+        @include glass-gray-shadow;
+        
+        position: sticky;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        width: 100%;
-        padding: 10px;
+        padding: 10px 10px 10px 45px;
         background-color: $lightGray;
-        border-bottom: 1px solid $lightGrayBorder;
     }
 
     .the-nav__logout-button {

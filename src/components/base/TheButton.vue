@@ -1,14 +1,19 @@
 <template>
-    <a 
+    <a
         @click="emit('click')"
-        class="the-button"
+        :class="['the-button', props.type ? `the-button--${props.type}` : '']"
     >
         <slot></slot>
     </a>
 </template>
 
 <script setup lang="ts">
-    const emit = defineEmits([ "click" ])
+    interface Props {
+        type?: 'important'
+    }
+
+    const props = defineProps<Props>();
+    const emit = defineEmits([ "click" ]);
 </script>
 
 <style lang="scss">
@@ -70,6 +75,46 @@
                 inset 0 1px 3px rgba(0, 0, 0, 0.25),
                 inset 0 1px 1px rgba(0, 0, 0, 0.15),
                 0 1px 0 rgba(255, 255, 255, 0.60);
+        }
+    }
+
+    .the-button--important {
+        border-color: rgba(185, 40, 40, 0.65);
+
+        background-image: linear-gradient(
+            180deg,
+            rgba(255, 198, 198, 0.95) 0%,
+            rgba(237, 145, 145, 0.90) 45%,
+            rgba(215, 110, 110, 0.95) 50%,
+            rgba(230, 132, 132, 1.00) 100%
+        );
+
+        &:hover {
+            border-color: rgba(160, 22, 22, 0.80);
+
+            background-image: linear-gradient(
+                180deg,
+                rgba(255, 172, 172, 0.95) 0%,
+                rgba(227, 112, 112, 0.90) 45%,
+                rgba(202, 75, 75, 0.95) 50%,
+                rgba(217, 97, 97, 1.00) 100%
+            );
+
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.90),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.30),
+                inset 1px 0 0 rgba(255, 255, 255, 0.45),
+                inset -1px 0 0 rgba(255, 255, 255, 0.45),
+                0 0 4px rgba(200, 30, 30, 0.40),
+                0 1px 0 rgba(255, 255, 255, 0.60);
+        }
+
+        &:active {
+            background-image: linear-gradient(
+                180deg,
+                rgba(188, 65, 65, 0.95) 0%,
+                rgba(205, 85, 85, 0.90) 100%
+            );
         }
     }
 </style>
