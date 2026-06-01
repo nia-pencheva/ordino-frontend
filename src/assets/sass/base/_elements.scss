@@ -3,7 +3,6 @@
 :root {
     font-family: segoe-ui, sans-serif;
     font-style: normal;
-    font-weight: 200;
     font-size: 14px;
 }
 
@@ -16,10 +15,17 @@
 
 html {
     min-width:360px;
+    min-height: 100vh;
+    background-color: white;
     color: variables.$fontColorMain;
 }
 
 a {
     color: black;
     text-decoration: none;
+}
+
+li {
+    list-style-position: outside;
+    margin-left: 1em;
 }
