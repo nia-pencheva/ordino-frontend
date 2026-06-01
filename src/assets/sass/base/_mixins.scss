@@ -1,0 +1,92 @@
+@mixin glass-texture {
+    /* Aero glass border */
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    outline: 1px solid rgba(0, 80, 160, 0.45);
+
+    /* Glassy background on the frame itself */
+    background: linear-gradient(
+        180deg,
+        rgba(180, 210, 240, 0.72) 0%,
+        rgba(140, 185, 230, 0.60) 4%,
+        rgba(100, 155, 210, 0.50) 100%
+    );
+
+    /* Frosted glass blur */
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+};
+
+/* Breakpoints */
+@mixin tablet() {
+    @media screen and (min-width: 768px) {
+        @content
+    }
+};
+
+@mixin desktop() {
+    @media screen and (min-width: 993px) {
+        @content
+    }
+};
+
+@mixin large-desktop() {
+    @media screen and (min-width: 1200px) {
+        @content;
+    }
+}
+
+/* Arrows */
+@mixin arrow($color, $thickness) {
+  border: solid $color;
+  border-width: 0 $thickness $thickness 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+@mixin arrow-right($color: black, $thickness: 3px) {
+    @include arrow($color, $thickness);
+
+    transform: rotate(-45deg);
+}
+
+@mixin arrow-left($color: black, $thickness: 3px) {
+    @include arrow($color, $thickness);
+
+    transform: rotate(135deg);
+}
+
+@mixin arrow-up($color: black, $thickness: 3px) {
+    @include arrow($color, $thickness);
+
+    transform: rotate(-135deg);
+}
+
+@mixin arrow-down($color: black, $thickness: 3px) {
+    @include arrow($color, $thickness);
+
+    transform: rotate(45deg);
+}
+
+/* Shadows */
+@mixin blue-shadow() {
+    /* Layered glow: inner white highlight + outer blue drop shadow */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),   /* top inner highlight */
+        inset 1px 0 0 rgba(255, 255, 255, 0.40),   /* left inner highlight */
+        inset -1px 0 0 rgba(255, 255, 255, 0.40),  /* right inner highlight */
+        inset 0 -1px 0 rgba(255, 255, 255, 0.20),  /* bottom inner */
+        0 4px 16px rgba(0, 60, 140, 0.55),         /* outer blue glow */
+        0 1px 3px rgba(0, 0, 0, 0.6),              /* tight drop shadow */
+        0 8px 32px rgba(0, 0, 0, 0.35);            /* ambient shadow */
+}
+
+@mixin glass-gray-shadow() {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),
+        inset 1px 0 0 rgba(255, 255, 255, 0.40),
+        inset -1px 0 0 rgba(255, 255, 255, 0.40),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.20),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+        0 0 5px rgba(0, 0, 0, 0.30),
+        0 0 3px rgba(0, 0, 0, 0.30);
+}

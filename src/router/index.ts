@@ -1,26 +1,88 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import { useAuth } from "@/store/auth/auth";
+import { createRouter, createWebHistory, RouteLocationNormalizedGeneric, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
+    path: "/login",
+    name: "login",
+    component: () => import("@/views/auth/LoginView.vue"),
+    meta: {
+      guest: true
+    }
   },
   {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: '/change-password',
+    name: 'change-password',
+    component: () => import("@/views/auth/ChangePasswordView.vue"),
+    meta: {
+      auth: true,
+      passwordRequiresChange: true
+    }
   },
+  {
+    path: "/",
+    name: "home",
+    component: () => import("@/views/HomeView.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: () => import("@/views/users/UsersView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+  {
+    path: "/users/add",
+    name: "add-user",
+    component: () => import("@/views/users/AddUserView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+  {
+    path: "/users/:id",
+    name: "edit-user",
+    component: () => import("@/views/users/EditUserView.vue"),
+    meta: {
+      auth: true,
+      admin: true
+    }
+  },
+{
+    path: "/recipes",
+    name: "recipes",
+    component: () => import("@/views/recipes/RecipesView.vue"),
+    meta: {
+      auth: true,
+    }
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "not-found",
+    component: () => import("@/views/NotFoundView.vue")
+  }
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: any) {
+  const auth = useAuth();
+
+  if(to.meta.auth && !auth.isAuthenticated) next("/login");
+  else if (auth.passwordChangeRequired && to.name !== 'change-password') next({ name: 'change-password' });
+  else if (to.meta.passwordRequiresChange && !auth.passwordChangeRequired) next({ name: 'home' });
+  else if(to.meta.admin && !auth.user?.isAdmin()) next({ name: 'home' });
+  else if(to.meta.guest && auth.isAuthenticated) next("/");
+  else next();
 });
 
 export default router;
