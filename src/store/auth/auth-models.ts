@@ -1,3 +1,5 @@
+import { Role } from "@/components/users/users-models"
+
 export interface LoginRequest extends Record<string, unknown> {
     username: string,
     password: string
@@ -16,10 +18,12 @@ export interface RefreshResponse {
 }
 
 export class User {
+    username: string;
     name: string;
     roles: Role[];
 
-    constructor(name: string, roles: Role[]) {
+    constructor(username: string, name: string, roles: Role[]) {
+        this.username = username;
         this.name = name;
         this.roles = roles;
     }
@@ -31,13 +35,4 @@ export class User {
     static fromJSON(data: any): User {
         return new User(data.username, data.name, data.roles);
     }
-}
-
-export enum Role {
-    ADMIN = "admin",
-    CHEF = "chef",
-    KITCHEN_STAFF = "kitchen staff",
-    LINE_COOK = "line cook",
-    MANAGER = "manager",
-    WAREHOUSE_MANAGER = "warehouse manager"
 }
