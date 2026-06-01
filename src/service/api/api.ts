@@ -1,87 +1,155 @@
 import { useAuth } from "@/store/auth/auth";
 import { HTTPMethod } from "./models/http-methods";
 import router from "@/router";
-import { ErrorResponse } from "./models/response-errors";
+import { UnprocessableContentError } from "./models/response-errors";
 
-export async function fetchAPI<TData = unknown>(
-    path: string,
-    method: HTTPMethod = 'GET',
-    body?: Record<string, unknown>,
-) {
-    const response = await fetch(buildUrl(path), buildOptions(method, body));
+export class APICall<TData = unknown> { 
+    private response?: TData;
 
-    if (!response.ok) {
-        const error = (await response.json() as ErrorResponse).error;
-        
-        if (response.status === 401) {
-            const auth = useAuth();
+    constructor(
+        private path: string,
+        private method: HTTPMethod = 'GET',
+        private body?: Record<string, unknown>
+    ) {};
 
-            if(error === "TOKEN_EXPIRED") {
-                try {
-                    await auth.refresh();
-                }
-                catch(refreshError: any) {
-                    if(["INVALID_REFRESH_TOKEN", "REFRESH_TOKEN_EXPIRED"].includes((refreshError as Error).message)) {
-                        await useAuth().logout();
-                        router.replace('/login');
-                        return {} as TData;
-                    }
+    async execute(): Promise<TData> {
+        const response = await this.fetchAPI();
 
-                    throw refreshError;
-                }
+        if(!response.ok)
+            await this.handleErrors(response);
 
-                const retryResponse = await fetch(buildUrl(path), buildOptions(method, body));
+        return this.response ?? APICall.parseResponseText<TData>(await response.text());
+    }
 
-                if(!retryResponse.ok) {
-                    throw new Error((await retryResponse.json() as ErrorResponse).error);
-                }
+    private async fetchAPI(): Promise<Response> {
+        return fetch(APICall.buildUrl(this.path), APICall.buildOptions(this.method, this.body))
+    }
 
-                return parseResponseText<TData>(await retryResponse.text());
-            }
-            else if(error == "INVALID_TOKEN") {
-                await useAuth().logout();
-                router.replace("/login");
-                return {} as TData;
-            }
+    static buildUrl(path: string): string {
+        return `http://localhost:9000/${path}`;
+    }
+
+    static buildOptions(method: HTTPMethod, body?: Record<string, unknown>): RequestInit {
+        const authToken: string = useAuth().token ?? "";
+
+        const options: RequestInit = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            method
         }
 
-        throw new Error(error);
+        if(body) {
+            options.body = JSON.stringify(body);
+        }
+
+        return options;
     }
 
-    return parseResponseText<TData>(await response.text());
+    static parseResponseText<TData>(responseText: string): TData {
+        let data: TData;
+
+        if(responseText == "") {
+            data = {} as TData;
+        }
+        else {
+            data = JSON.parse(responseText) as TData
+        }
+
+        return data;
+    }
+
+    private async handleErrors(reason: Response) {
+        const errorResponse = await reason.json();
+
+        switch(reason.status) {
+            case 401:
+                await this.handleUnauthorized(errorResponse.error);
+                break;
+            case 403:
+                await this.handleForbidden(errorResponse.error);
+                break;
+            case 404:
+                this.handleNotFound();
+                break;
+            case 422:
+                throw new UnprocessableContentError(errorResponse.errors);
+            default:
+                throw new Error(errorResponse);
+        } 
+    }
+
+    private async handleUnauthorized(error: string) {
+        switch(error) {
+            case "TOKEN_EXPIRED":  
+                await this.handleTokenExpired();
+                break;
+            case "INVALID_TOKEN": 
+                await this.handleInvalidToken();
+                break;
+            default:
+                throw new Error(error);
+        }
+    }
+
+    private async handleTokenExpired() {
+        try {
+            await useAuth().refresh();
+
+            const retryResponse = await fetch(APICall.buildUrl(this.path), APICall.buildOptions(this.method, this.body));
+
+            if(!retryResponse.ok)
+                throw (await retryResponse.json());
+            
+            this.response = APICall.parseResponseText<TData>(await retryResponse.text());
+        }
+        catch(refreshError: any) {
+            if(["INVALID_REFRESH_TOKEN", "REFRESH_TOKEN_EXPIRED"].includes((refreshError.error))) {
+                await this.handleInvalidRefreshToken();
+            }
+            else {
+                throw refreshError;
+            }
+        }
+    }
+
+    private async handleInvalidRefreshToken() {
+        await useAuth().logout();
+        router.replace('/login');
+        this.response = {} as TData;
+    }
+
+    private async handleInvalidToken() {
+        await useAuth().logout();
+        router.replace("/login");
+        this.response = {} as TData; 
+    }
+
+    private async handleForbidden(error: string) {
+        switch(error) {
+            case "PASSWORD_CHANGE_REQUIRED":
+                await this.handlePasswordChangeRequired();
+                break;
+            default:
+                throw new Error(error);
+        }
+    }
+
+    private async handlePasswordChangeRequired() {
+        if(!useAuth().passwordChangeRequired) {
+            await useAuth().logout();
+            router.replace({ name: 'login' });
+        }
+        else {
+            router.replace({ name: "change-password" });
+        }
+        
+        this.response = {} as TData;
+    }
+
+    private handleNotFound() {
+        router.replace({ name: 'not-found' });
+    }
 }
 
-export function buildUrl(path: string): string {
-    return `http://localhost:9000/${path}`;
-}
-
-function buildOptions(method: HTTPMethod, body?: Record<string, unknown>): RequestInit {
-    const authToken: string = useAuth().getToken() ?? "";
-
-    const options: RequestInit = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`
-        },
-        method
-    }
-
-    if(body) {
-        options.body = JSON.stringify(body);
-    }
-
-    return options;
-}
-
-export function parseResponseText<TData>(responseText: string): TData {
-    let data: TData;
-
-    if(responseText == "") {
-        data = {} as TData;
-    }
-    else {
-        data = JSON.parse(responseText) as TData
-    }
-
-    return data;
-}
