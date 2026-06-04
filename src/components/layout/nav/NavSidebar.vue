@@ -26,6 +26,14 @@
             >
                 Products
             </NavItem>
+            <NavItem
+                v-if="auth.user?.hasRoles([ Role.CHEF, Role.WAREHOUSE_MANAGER ])" 
+                icon-src="/images/icons/units.png"
+                link="/units"
+                :icon-styles="[ 'nav-item__icon--units' ]"
+            >
+                Units
+            </NavItem>
         </div>
     </div>
 </template>
@@ -108,8 +116,13 @@
         }
 
         &--products {
-            height: 16px;
-            width: 16px;
+            height: 15px;
+            width: 15px;
+        }
+
+        &--units {
+            height: 15px;
+            width: 15px;
         }
     }
 </style>
