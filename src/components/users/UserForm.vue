@@ -122,7 +122,6 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import { computed, ref } from 'vue';
     import { User, Role, AddUserResponse } from './users-models';
     import { useRoute, useRouter } from 'vue-router';
@@ -130,7 +129,6 @@
     import { UnprocessableContentError } from '@/service/api/models/response-errors';
     import { useAuth } from '@/store/auth/auth';
 
-    // Components
     import TextInput from '../base/TextInput.vue';
     import FormElement from '../base/form/FormElement.vue';
     import TheForm from '../base/form/TheForm.vue';
@@ -138,39 +136,29 @@
     import TheButton from '../base/TheButton.vue';
     import TheWindow from '../base/TheWindow.vue';
     
-    // Router
     const route = useRoute();
     const router = useRouter();
 
-    // Store
     const auth = useAuth();
 
-    // Props
     interface Props {
         user?: User
     }
 
     const props = defineProps<Props>();
 
-    // Refs
-    /* Form elements */
     const username = ref<string>(props.user?.username ?? "");
     const fullName = ref<string>(props.user?.fullName ?? "");
     const phoneNumber = ref<string>(props.user?.phoneNumber ?? "");
     const email = ref<string>(props.user?.email ?? "");
     const roles = ref<string[]>(props.user?.roles ?? []);
-
-    /* Errors */
     const errors = ref<UnprocessableContentError | undefined>(undefined);
-
-    /* Password */
     const initialPassword = ref<string | undefined>(undefined);
 
     const disableAdminRole = computed<boolean>(() => {
-        return (auth.user?.username == props.user?.username && auth.user?.isAdmin()) ?? false;
+        return (auth.user?.username == props.user?.username && auth.user?.hasRoles([ Role.ADMIN ])) ?? false;
     });
 
-    // Funcitons
     async function handleSubmit() {
         try {
             const data = {

@@ -1,55 +1,55 @@
 <template>
-    <TheLayout :content-styles="[ 'edit-user-view' ]">
-        <TheTitle>Edit user</TheTitle>
+    <TheLayout :content-styles="['edit-product-view']">
+        <TheTitle>Edit product</TheTitle>
 
         <br>
 
-        <div class="edit-user-view__loader" v-if="!loaded">
-            <TheSpinner size="lg"/>
+        <div class="edit-product-view__loader" v-if="!loaded">
+            <TheSpinner size="lg" />
         </div>
-        <UserForm
+        <ProductForm
             v-else
-            :user="user"
+            :product="product"
         />
     </TheLayout>
 </template>
 
 <script setup lang="ts">
-    import { User } from '@/components/users/users-models';
     import { computed, onMounted, ref } from 'vue';
+    import { Product } from '@/components/products/products-models';
     import { useRoute } from 'vue-router';
     import { APICall } from '@/service/api/api';
 
     import TheLayout from '@/components/layout/TheLayout.vue';
     import TheTitle from '@/components/layout/TheTitle.vue';
-    import UserForm from '@/components/users/UserForm.vue';
+    import ProductForm from '@/components/products/ProductForm.vue';
     import TheSpinner from '@/components/base/TheSpinner.vue';
 
     const route = useRoute();
 
-    const user = ref<User | undefined>(undefined);
+    const product = ref<Product | undefined>(undefined);
 
     const loaded = computed<boolean>(() => {
-        return user.value !== undefined;
+        return product.value !== undefined;
     });
 
-    async function fetchUser() {
-        user.value =  await (new APICall<User>("users/" + route.params.id)).execute();
+    async function fetchProduct() {
+        product.value = await (new APICall<Product>('products/' + route.params.id)).execute();
     }
 
     onMounted(async () => {
-        await fetchUser();
-    })
+        await fetchProduct();
+    });
 </script>
 
 <style lang="scss">
-    .edit-user-view {
+    .edit-product-view {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    .edit-user-view__loader {
+    .edit-product-view__loader {
         flex: 1;
         display: flex;
         align-items: center;
