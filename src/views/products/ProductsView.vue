@@ -40,13 +40,25 @@
                 <TheSpinner size="lg"/>
             </div>
             <template v-else>
-                 <ProductsTable
-                    v-if="products?.length != 0"
-                    :products="products"
-                    @activated-product="handleActivated"
-                    @open-deactivate-popup="openDeactivatePopup"
-                    @open-delete-popup="openDeletePopup"
-                />
+                <div 
+                    v-if="productsPage?.totalElements != 0"
+                    class="products-view__results"
+                >
+                    <ProductsTable
+                        :products="productsPage?.products"
+                        @activated-product="handleActivated"
+                        @open-deactivate-popup="openDeactivatePopup"
+                        @open-delete-popup="openDeletePopup"
+                    />
+                    <ThePager
+                        v-if="(productsPage?.totalElements ?? 0) > pageSize"
+                        :current-page="currentPage"
+                        :total-pages="productsPage?.totalPages"
+                        @previous="getPreviousPage()"
+                        @next="getNextPage()"
+                    />
+                </div>
+
                 <div
                     v-else
                     class="products-view__not-results"
@@ -74,7 +86,7 @@
 <script setup lang="ts">
     import router from '@/router';
     import { computed, onMounted, ref, watch } from 'vue';
-    import { Product } from '@/components/products/products-models';
+    import { Product, ProductsPage } from '@/components/products/products-models';
     import { APICall } from '@/service/api/api';
 
     import TheButton from '@/components/base/TheButton.vue';
@@ -85,28 +97,32 @@
     import TheSpinner from '@/components/base/TheSpinner.vue';
     import DeactivateProductPopup from '@/components/products/DeactivateProductPopup.vue';
     import DeleteProductPopup from '@/components/products/DeleteProductPopup.vue';
+    import ThePager from '@/components/base/ThePager.vue';
 
-    const products = ref<Product[] | undefined>(undefined);
+    const pageSize = 10;
+
+    const productsPage = ref<ProductsPage | undefined>(undefined);
     const searchName = ref<string>('');
     const active = ref<boolean>(true);
+    const currentPage = ref<number>(1);
 
     const deactivatePopup = ref<Product | undefined>(undefined);
     const deletePopup = ref<Product | undefined>(undefined);
 
-    const loaded = computed<boolean>(() => {
-        return products.value != undefined;
-    });
+    const loaded = computed<boolean>(() => productsPage.value != undefined);
 
     let debounceTimer: ReturnType<typeof setTimeout>;
 
     watch(searchName, () => {
         clearTimeout(debounceTimer);
-        products.value = undefined;
+        currentPage.value = 1;
+        productsPage.value = undefined;
         debounceTimer = setTimeout(fetchProducts, 400);
     });
 
     watch(active, () => {
-        products.value = undefined;
+        currentPage.value = 1;
+        productsPage.value = undefined;
         fetchProducts();
     });
 
@@ -124,22 +140,36 @@
 
     async function handleDeactivated() {
         deactivatePopup.value = undefined;
+        currentPage.value = 1;
         await fetchProducts();
     }
 
     async function handleDeleted() {
         deletePopup.value = undefined;
+        currentPage.value = 1;
         await fetchProducts();
     }
 
     async function fetchProducts() {
-        let path = `products?active=${active.value}`;
+        let path = `products?active=${active.value}&page=${currentPage.value}`;
 
-        if(searchName.value.trim()) {
+        if (searchName.value.trim()) {
             path += `&name=${encodeURIComponent(searchName.value.trim())}`;
         }
 
-        products.value = await (new APICall<Product[]>(path)).execute();
+        productsPage.value = await (new APICall<ProductsPage>(path)).execute();
+    }
+
+    async function getNextPage() {
+        currentPage.value++;
+        productsPage.value = undefined;
+        await fetchProducts();
+    }
+
+    async function getPreviousPage() {
+        currentPage.value--;
+        productsPage.value = undefined;
+        await fetchProducts();
     }
 
     onMounted(async () => {
@@ -207,6 +237,13 @@
 
             @include glass-gray-shadow();
         }
+    }
+
+    .products-view__results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
 
     .products-view__tab__wrapper {

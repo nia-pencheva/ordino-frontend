@@ -38,9 +38,13 @@
         <TheButton
             @click="handleSubmit()"
             class="product-form__submit"
+            :disabled="submitting"
         >
-            <span v-if="route.name == 'add-product'">Add</span>
-            <span v-if="route.name == 'edit-product'">Save</span>
+            <span :class="{ 'product-form__submit-label--hidden': submitting }">
+                <span v-if="route.name == 'add-product'">Add</span>
+                <span v-if="route.name == 'edit-product'">Save</span>
+            </span>
+            <TheSpinner v-if="submitting" size="xs" class="product-form__spinner" />
         </TheButton>
     </TheForm>
 </template>
@@ -53,10 +57,11 @@
     import { UnprocessableContentError } from '@/service/api/models/response-errors';
 
     import TextInput from '../base/TextInput.vue';
+    import TextArea from '../base/TextArea.vue';
     import FormElement from '../base/form/FormElement.vue';
     import TheForm from '../base/form/TheForm.vue';
     import TheButton from '../base/TheButton.vue';
-import TextArea from '../base/TextArea.vue';
+    import TheSpinner from '../base/TheSpinner.vue';
 
     const route = useRoute();
     const router = useRouter();
@@ -70,8 +75,11 @@ import TextArea from '../base/TextArea.vue';
     const name = ref<string>(props.product?.name ?? '');
     const notes = ref<string>(props.product?.notes ?? '');
     const errors = ref<UnprocessableContentError | undefined>(undefined);
+    const submitting = ref<boolean>(false);
 
     async function handleSubmit() {
+        submitting.value = true;
+
         try {
             const data = {
                 name: name.value.trim(),
@@ -87,6 +95,8 @@ import TextArea from '../base/TextArea.vue';
             if (error instanceof UnprocessableContentError) {
                 errors.value = error;
             }
+        } finally {
+            submitting.value = false;
         }
     }
 
@@ -103,11 +113,25 @@ import TextArea from '../base/TextArea.vue';
 
 <style lang="scss">
     .product-form {
-        max-width: 500px;
+        max-width: 350px;
+        width: 100%;
     }
 
     .product-form__submit {
         width: 75px;
         padding: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-form__submit-label--hidden {
+        visibility: hidden;
+    }
+
+    .product-form__spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 </style>
