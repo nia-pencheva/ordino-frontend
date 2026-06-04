@@ -7,23 +7,18 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import { onMounted, onUnmounted } from 'vue';
 
-    // Components
     import TheWindow from '../TheWindow.vue';
 
-    // Vars
     let enterEventListener = (event: KeyboardEvent) => {
         if (event.key === 'Enter') {
             emit("enter-pressed");
         }
     };
 
-    // Emits
     const emit = defineEmits([ "enter-pressed" ]); 
 
-    // Lifecycle hooks
     onMounted(() => {
         document.addEventListener('keydown', enterEventListener);
     });

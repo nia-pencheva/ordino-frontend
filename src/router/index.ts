@@ -1,7 +1,9 @@
+import { Role } from "@/components/users/users-models";
 import { useAuth } from "@/store/auth/auth";
 import { createRouter, createWebHistory, RouteLocationNormalizedGeneric, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
+  // Auth
   {
     path: "/login",
     name: "login",
@@ -15,25 +17,22 @@ const routes: Array<RouteRecordRaw> = [
     name: 'change-password',
     component: () => import("@/views/auth/ChangePasswordView.vue"),
     meta: {
-      auth: true,
       passwordRequiresChange: true
     }
   },
+  // Home
   {
     path: "/",
     name: "home",
     component: () => import("@/views/HomeView.vue"),
-    meta: {
-      auth: true
-    }
   },
+  // Users
   {
     path: "/users",
     name: "users",
     component: () => import("@/views/users/UsersView.vue"),
     meta: {
-      auth: true,
-      admin: true
+      roles: [ Role.ADMIN ]
     }
   },
   {
@@ -41,8 +40,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-user",
     component: () => import("@/views/users/AddUserView.vue"),
     meta: {
-      auth: true,
-      admin: true
+      roles: [ Role.ADMIN ]
     }
   },
   {
@@ -50,18 +48,41 @@ const routes: Array<RouteRecordRaw> = [
     name: "edit-user",
     component: () => import("@/views/users/EditUserView.vue"),
     meta: {
-      auth: true,
-      admin: true
+      roles: [ Role.ADMIN ]
     }
   },
-{
+  // Recipes
+  {
     path: "/recipes",
     name: "recipes",
     component: () => import("@/views/recipes/RecipesView.vue"),
+  },
+  // Products
+  {
+    path: "/products",
+    name: "products",
+    component: () => import("@/views/products/ProductsView.vue"),
     meta: {
-      auth: true,
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
     }
   },
+  {
+    path: "/products/add",
+    name: "add-product",
+    component: () => import("@/views/products/AddProductView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/products/:id",
+    name: "edit-product",
+    component: () => import("@/views/products/EditProductView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Not found
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",
@@ -77,11 +98,11 @@ const router = createRouter({
 router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: any) {
   const auth = useAuth();
 
-  if(to.meta.auth && !auth.isAuthenticated) next("/login");
+  if(!to.meta.guest && !auth.isAuthenticated) next("/login");
+  else if(to.meta.guest && auth.isAuthenticated) next({ name: 'home' });
   else if (auth.passwordChangeRequired && to.name !== 'change-password') next({ name: 'change-password' });
   else if (to.meta.passwordRequiresChange && !auth.passwordChangeRequired) next({ name: 'home' });
-  else if(to.meta.admin && !auth.user?.isAdmin()) next({ name: 'home' });
-  else if(to.meta.guest && auth.isAuthenticated) next("/");
+  else if(to.meta.roles && !auth.user?.hasRoles(to.meta.roles as Role[])) next({ name: 'home' });
   else next();
 });
 

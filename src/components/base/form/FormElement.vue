@@ -8,7 +8,7 @@
             v-if="hasErrors"
             class="form-element__errors"
         >
-            <li v-for="error in errors">
+            <li v-for="error in errors?.slice().sort((a, b) => a.message.localeCompare(b.message))">
                 {{ error.message }}
             </li>
         </ul>
@@ -16,11 +16,10 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
+    
     import { ValidationError } from '@/service/api/models/response-errors';
     import { computed } from 'vue';
 
-    // Props
     interface Props {
         id: string,
         errors?: ValidationError[]
@@ -28,7 +27,6 @@
 
     const props = defineProps<Props>();
 
-    // Computed
     const hasErrors = computed<boolean>(() => {
         return props.errors != undefined && props.errors?.length !== 0 
     });

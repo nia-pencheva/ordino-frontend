@@ -1,15 +1,26 @@
 <template>
     <a
-        @click="emit('click')"
-        :class="['the-button', props.type ? `the-button--${props.type}` : '']"
+        @click="!props.disabled && emit('click')"
+        :class="[
+            'the-button', props.type ? `the-button--${props.type}` : '', 
+            { 'the-button--disabled': props.disabled },
+            { 'the-button--with-tooltip': props.tooltip?.length }
+        ]"
     >
         <slot></slot>
+        <div v-if="props.tooltip?.length" class="the-button__tooltip">
+            <div v-for="reason in props.tooltip" :key="reason" class="the-button__tooltip-reason">
+                {{ reason }}
+            </div>
+        </div>
     </a>
 </template>
 
 <script setup lang="ts">
     interface Props {
         type?: 'important'
+        disabled?: boolean
+        tooltip?: string[]
     }
 
     const props = defineProps<Props>();
@@ -76,6 +87,70 @@
                 inset 0 1px 1px rgba(0, 0, 0, 0.15),
                 0 1px 0 rgba(255, 255, 255, 0.60);
         }
+
+        &:hover .the-button__tooltip {
+            display: block;
+        }
+    }
+
+    .the-button__tooltip {
+        display: none;
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 100;
+        min-width: 160px;
+        max-width: 280px;
+        padding: 6px 10px;
+        border-radius: 4px;
+        background: rgba(40, 40, 40, 0.92);
+        color: rgba(255, 255, 255, 0.90);
+        font-size: 12px;
+        white-space: normal;
+        pointer-events: none;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(40, 40, 40, 0.92);
+        }
+    }
+
+    .the-button__tooltip-reason {
+        &:not(:last-child) {
+            margin-bottom: 4px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+    }
+
+    .the-button--disabled {
+        cursor: not-allowed;
+        border-color: rgba(80, 80, 80, 0.25);
+        color: rgba(0, 0, 0, 0.35);
+
+        background-image: linear-gradient(
+            180deg,
+            rgba(240, 240, 240, 0.80) 0%,
+            rgba(225, 225, 225, 0.80) 100%
+        );
+
+        box-shadow: none;
+
+        &:hover, &:active {
+            border-color: rgba(80, 80, 80, 0.25);
+            background-image: linear-gradient(
+                180deg,
+                rgba(240, 240, 240, 0.80) 0%,
+                rgba(225, 225, 225, 0.80) 100%
+            );
+            box-shadow: none;
+        }
     }
 
     .the-button--important {
@@ -116,5 +191,9 @@
                 rgba(205, 85, 85, 0.90) 100%
             );
         }
+    }
+
+    .the-button--with-tooltip {
+        position: relative;
     }
 </style>
