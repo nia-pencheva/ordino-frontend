@@ -4,7 +4,7 @@
         class="nav-item"    
     >
         <img 
-            class="nav-item__icon" 
+            :class="[ ...iconStyles ?? '' ]" 
             :src="props.iconSrc"
         />
         <span>
@@ -16,6 +16,7 @@
 <script setup lang="ts">
     interface Props {
         iconSrc: string,
+        iconStyles?: string[],
         link: string,
     }
 
@@ -32,10 +33,5 @@
         background: linear-gradient(#fff, #dcdcdc);
         border-bottom: 1px solid #ccc;
         padding: 10px;
-    }
-
-    .nav-item__icon {
-        height: 12px; 
-        width: 12px;
     }
 </style>

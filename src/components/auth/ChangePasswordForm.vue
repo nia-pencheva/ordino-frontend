@@ -52,33 +52,27 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import router from '@/router';
     import { APICall } from '@/service/api/api';
     import { computed, ref } from 'vue';
     import { useAuth } from '@/store/auth/auth';
     import { UnprocessableContentError, ValidationError } from '@/service/api/models/response-errors';
 
-    // Components
     import FormElement from '@/components/base/form/FormElement.vue';
     import TheForm from '@/components/base/form/TheForm.vue';
     import TextInput from '@/components/base/TextInput.vue';
     import TheButton from '../base/TheButton.vue';
 
-    // Store
     const auth = useAuth();
 
-    // Refs
     const newPassword = ref<string>("");
     const confirmPassword = ref<string>("");
     const errors = ref<ValidationError[]>([]);
 
-    // Computed
     const hasErrors = computed<boolean>(() => {
         return errors.value != undefined && errors.value?.length !== 0 
     });
-
-    // Functions
+    
     async function handleSubmit() {
         try {
             if(newPassword.value.trim() != "" && confirmPassword.value.trim() != "") {

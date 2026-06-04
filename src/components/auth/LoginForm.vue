@@ -48,29 +48,23 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import router from '@/router';
     import { useAuth } from '@/store/auth/auth';
     import { computed, ref } from 'vue';
 
-    // Components
     import TheButton from '../base/TheButton.vue';
     import TextInput from '../base/TextInput.vue';
     import TheForm from '../base/form/TheForm.vue';
     import FormElement from '../base/form/FormElement.vue';
 
-    // Store
     const auth = useAuth();
 
-    // Refs
     const username = ref<string>("");
     const password = ref<string>("");
     const loginError = ref<string>("");
 
-    // Computed
     const hasLoginError = computed<boolean>(() => loginError.value != "");
 
-    // Functions
     async function handleLogin() {
         try {
             if(username.value.trim() != "" && password.value.trim() != "") {

@@ -11,32 +11,37 @@
 
         <div class="nav-sidebar__content">
             <NavItem
-                v-if="auth.user?.isAdmin()" 
+                v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
                 icon-src="/images/icons/user.png"
                 link="/users"
+                :icon-styles="[ 'nav-item__icon--users' ]"
             >
                 Users
+            </NavItem>
+            <NavItem
+                v-if="auth.user?.hasRoles([ Role.CHEF, Role.WAREHOUSE_MANAGER ])" 
+                icon-src="/images/icons/products.png"
+                link="/products"
+                :icon-styles="[ 'nav-item__icon--products' ]"
+            >
+                Products
             </NavItem>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    // Imports
     import { ref } from 'vue';
     import { useAuth } from '@/store/auth/auth';
+    import { Role } from '@/components/users/users-models';
 
-    // Components
     import TheButton from '../../base/TheButton.vue';
     import NavItem from './NavItem.vue';
 
-    // Store
     const auth = useAuth();
 
-    // Refs
     const sidebarOpen = ref<boolean>(false);
 
-    // Functions
     function toggleSidebar() {
         sidebarOpen.value = !sidebarOpen.value;
     }
@@ -94,5 +99,17 @@
         background-color: $lightGray;
         height: 100%;
         width: 100%;
+    }
+
+    .nav-item__icon {
+        &--users {
+            height: 12px; 
+            width: 12px;
+        }
+
+        &--products {
+            height: 16px;
+            width: 16px;
+        }
     }
 </style>

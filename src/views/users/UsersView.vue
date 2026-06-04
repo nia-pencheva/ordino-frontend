@@ -38,13 +38,11 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import { computed, onMounted, ref } from 'vue';
     import router from '@/router';
     import { User } from '@/components/users/users-models';
     import { APICall } from '@/service/api/api';
 
-    // Components
     import TheSpinner from '@/components/base/TheSpinner.vue';
     import TheLayout from '@/components/layout/TheLayout.vue';
     import TheTitle from '@/components/layout/TheTitle.vue';
@@ -53,17 +51,14 @@
     import ResetPasswordPopup from '@/components/users/ResetPasswordPopup.vue';
     import DeleteUserPopup from '@/components/users/DeleteUserPopup.vue';
 
-    // Refs
     const users = ref<User[] | undefined>(undefined);
     const resetPasswordPopup = ref<{ userId: Number; username: string } | undefined>(undefined);
     const deletePopup = ref<{ userId: Number; username: string } | undefined>(undefined);
 
-    // Computed
     const loaded = computed<boolean>(() => {
         return users.value != undefined;
     });
 
-    // Functions
     async function fetchUsers() {
         users.value = await (new APICall<User[]>("users")).execute();
     }
@@ -81,7 +76,6 @@
         await fetchUsers();
     }
 
-    // Lifecycle hooks
     onMounted(async () => {
         await fetchUsers();
     });

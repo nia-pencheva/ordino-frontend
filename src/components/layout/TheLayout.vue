@@ -9,11 +9,9 @@
 </template>
 
 <script setup lang="ts">
-    // Import
     import NavSidebar from '@/components/layout/nav/NavSidebar.vue';
     import TheNav from '@/components/layout/nav/TheNav.vue';
 
-    // Props
     interface Props {
         contentStyles?: string[]
     };
@@ -28,6 +26,8 @@
     }
 
     .the-layout__content {
+        display: flex;
+        flex-direction: column;
         max-width: 1200px;
         margin: 0 auto;
         padding: 20px 10px 20px 45px;
