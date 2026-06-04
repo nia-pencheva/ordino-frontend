@@ -1,19 +1,19 @@
 <template>
-    <TheLayout :content-styles="[ 'add-user-view' ]">
-        <TheTitle>Add user</TheTitle>
+    <TheLayout :content-styles="['add-product-view']">
+        <TheTitle>Add product</TheTitle>
 
-        <UserForm />
+        <ProductForm />
     </TheLayout>
 </template>
 
 <script setup lang="ts">
     import TheLayout from '@/components/layout/TheLayout.vue';
     import TheTitle from '@/components/layout/TheTitle.vue';
-    import UserForm from '@/components/users/UserForm.vue';
+    import ProductForm from '@/components/products/ProductForm.vue';
 </script>
 
 <style lang="scss">
-    .add-user-view {
+    .add-product-view {
         display: flex;
         flex-direction: column;
         align-items: center;
