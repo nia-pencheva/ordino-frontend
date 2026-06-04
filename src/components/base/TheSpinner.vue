@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
     withDefaults(defineProps<{
-        size?: 'sm' | 'md' | 'lg'
+        size?: 'xs' | 'sm' | 'md' | 'lg'
     }>(), {
         size: 'md'
     })
@@ -36,6 +36,11 @@
 
         &::before { inset: 0; }
         &::after  { inset: 15%; }
+
+        &--xs .the-spinner__ring {
+            width: 15px;
+            height: 15px;
+        }
 
         &--sm .the-spinner__ring {
             width: 24px;
