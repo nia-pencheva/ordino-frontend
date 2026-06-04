@@ -1,6 +1,6 @@
 <template>
     <div class="users-table__row__wrapper">
-        <TableRow
+        <div class="users-table__row"
             @click="toggleDetails"  
             :class="[ detailsOpen ? 'users-table__row--details-open' : 'users-table__row--details-closed']"
         >
@@ -15,7 +15,7 @@
                     <i :class="[ detailsOpen ? 'users-table__toggle-details__icon--close' : 'users-table__toggle-details__icon--open' ]"></i>
                 </TheButton>
             </div>
-        </TableRow>
+        </div>
 
         <div 
             v-if="detailsOpen"
@@ -23,27 +23,27 @@
         >
             <div class=users-table__row__details>
                 <p>
-                    <span class="users-table__row__details__title">
+                    <b>
                         Username
-                    </span>: 
+                    </b>: 
                     {{ props.user.username }}
                 </p>
                 <p>
-                    <span class="users-table__row__details__title">
+                    <b>
                         Email
-                    </span>: 
+                    </b>: 
                     {{ props.user.email }}
                 </p>
                 <p>
-                    <span class="users-table__row__details__title">
+                    <b>
                         Phone Number
-                    </span>: 
+                    </b>: 
                     {{ props.user.phoneNumber }}
                 </p>
                 <p style="text-transform: capitalize;">
-                    <span class="users-table__row__details__title">
+                    <b>
                         Roles
-                    </span>: 
+                    </b>: 
                     {{ props.user.roles.join(", ") }}
                 </p>
             </div>
@@ -76,35 +76,27 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import router from '@/router';
     import { ref } from 'vue';
     import { User } from './users-models.js';
     import { useAuth } from '@/store/auth/auth';
 
-    // Components
     import TheButton from '../base/TheButton.vue';
-    import TableRow from '../base/table/TableRow.vue';
 
-    // Store
     const auth = useAuth();
 
-    // Props
     interface Props {
         user: User
     }
 
     const props = defineProps<Props>();
 
-    // Refs
     const detailsOpen = ref<boolean>(false);
 
-    // Functions
     function toggleDetails() {
         detailsOpen.value = !detailsOpen.value;
     }
 
-    // Emit
     const emit = defineEmits<{
         'open-reset-password-popup': [id: Number, username: string]
         'open-delete-popup': [id: Number, username: string]
@@ -123,6 +115,12 @@
             inset -1px 0 0 rgba(255, 255, 255, 0.55),
             0 1px 2px rgba(0, 0, 0, 0.20),
             0 1px 0 rgba(255, 255, 255, 0.60);
+    }
+
+    .users-table__row {
+        padding: 10px;
+        border-bottom: 1px solid $lightGrayBorder;
+        background: linear-gradient(#fff, #dcdcdc);
     }
 
     [class*="users-table__row--"] {
@@ -181,10 +179,6 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-    }
-
-    .users-table__row__details__title {
-        font-weight: bold;
     }
 
     .users-table__row__details__buttons {

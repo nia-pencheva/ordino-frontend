@@ -28,8 +28,8 @@ export class User {
         this.roles = roles;
     }
 
-    public isAdmin(): boolean {
-        return this.roles?.includes(Role.ADMIN) ?? false;
+    public hasRoles(roles: Role[]): boolean {
+        return roles.some(role => this.roles?.includes(role)) ?? false;
     }
 
     static fromJSON(data: any): User {

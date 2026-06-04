@@ -11,15 +11,12 @@
 </template>
 
 <script setup lang="ts">
-    // Imports
     import router from '@/router';
     import { useAuth } from '@/store/auth/auth';
 
-    // Components
     import TheButton from '../../base/TheButton.vue';
     import NavBreadcrumbs from './NavBreadcrumbs.vue';
 
-    // Store
     const auth = useAuth();
 
     async function handleLogout() {
