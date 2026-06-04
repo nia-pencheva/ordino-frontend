@@ -82,6 +82,31 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Units
+  {
+    path: "/units",
+    name: "units",
+    component: () => import("@/views/units/UnitsView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/units/add",
+    name: "add-unit",
+    component: () => import("@/views/units/AddUnitView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/units/:id",
+    name: "edit-unit",
+    component: () => import("@/views/units/EditUnitView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",
