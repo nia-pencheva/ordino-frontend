@@ -193,6 +193,27 @@
         }
     }
 
+    .the-button--important.the-button--disabled {
+        border-color: rgba(185, 40, 40, 0.25);
+        color: rgba(120, 30, 30, 0.45);
+
+        background-image: linear-gradient(
+            180deg,
+            rgba(255, 220, 220, 0.75) 0%,
+            rgba(240, 195, 195, 0.75) 100%
+        );
+
+        &:hover, &:active {
+            border-color: rgba(185, 40, 40, 0.25);
+            background-image: linear-gradient(
+                180deg,
+                rgba(255, 220, 220, 0.75) 0%,
+                rgba(240, 195, 195, 0.75) 100%
+            );
+            box-shadow: none;
+        }
+    }
+
     .the-button--with-tooltip {
         position: relative;
     }

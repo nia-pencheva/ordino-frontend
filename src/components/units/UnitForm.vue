@@ -1,8 +1,5 @@
 <template>
-    <TheForm
-        class="unit-form"
-        @enter-pressed="handleSubmit"
-    >
+    <TheForm class="unit-form">
         <FormElement
             id="unit"
             :errors="errors?.getByField('unit')"
@@ -29,6 +26,21 @@
                     :id="defaultProps.id"
                     type="text"
                     placeholder="Abbreviation"
+                />
+            </template>
+        </FormElement>
+
+        <FormElement
+            v-if="route.name == 'edit-unit'" 
+            id="category"
+        >
+            <template #label>Category</template>
+            <template #default="defaultProps">
+                <TheSelect 
+                    v-model="categoryId"
+                    :id="defaultProps.id"
+                    :options="props.unit?.allUnitCategories.map(category => ({ value: category.id, label: category.category }))!"
+                    placeholder="Select unit category"
                 />
             </template>
         </FormElement>
@@ -61,7 +73,7 @@
 
 <script setup lang="ts">
     import { ref } from 'vue';
-    import { Unit } from './units-models';
+    import { EditUnitResponse } from './units-models';
     import { useRoute, useRouter } from 'vue-router';
     import { APICall } from '@/service/api/api';
     import { UnprocessableContentError } from '@/service/api/models/response-errors';
@@ -71,18 +83,20 @@
     import TheForm from '../base/form/TheForm.vue';
     import TheButton from '../base/TheButton.vue';
     import TheSpinner from '../base/TheSpinner.vue';
+    import TheSelect from '../base/TheSelect.vue';
 
     const route = useRoute();
     const router = useRouter();
 
     interface Props {
-        unit?: Unit
+        unit?: EditUnitResponse
     }
 
     const props = defineProps<Props>();
 
     const unit = ref<string>(props.unit?.unit ?? '');
     const abbreviation = ref<string>(props.unit?.abbreviation ?? '');
+    const categoryId = ref<number | null>(props.unit?.categoryId ?? null)
     const errors = ref<UnprocessableContentError | undefined>(undefined);
     const submitting = ref<boolean>(false);
 
@@ -92,7 +106,8 @@
         try {
             const data = {
                 unit: unit.value.trim(),
-                abbreviation: abbreviation.value.trim()
+                abbreviation: abbreviation.value.trim(),
+                categoryId: route.query.id ?? categoryId.value
             };
 
             if (route.name == 'add-unit') {

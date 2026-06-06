@@ -7,6 +7,7 @@
         <div class="edit-unit-view__loader" v-if="!loaded">
             <TheSpinner size="lg" />
         </div>
+
         <UnitForm
             v-else
             :unit="unit"
@@ -16,7 +17,7 @@
 
 <script setup lang="ts">
     import { computed, onMounted, ref } from 'vue';
-    import { Unit } from '@/components/units/units-models';
+    import { EditUnitResponse } from '@/components/units/units-models';
     import { useRoute } from 'vue-router';
     import { APICall } from '@/service/api/api';
 
@@ -27,12 +28,12 @@
 
     const route = useRoute();
 
-    const unit = ref<Unit | undefined>(undefined);
+    const unit = ref<EditUnitResponse | undefined>(undefined);
 
     const loaded = computed<boolean>(() => unit.value !== undefined);
 
     async function fetchUnit() {
-        unit.value = await (new APICall<Unit>('units/' + route.params.id)).execute();
+        unit.value = await (new APICall<EditUnitResponse>('units/' + route.params.id)).execute();
     }
 
     onMounted(async () => {

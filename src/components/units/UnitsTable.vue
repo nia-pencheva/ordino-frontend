@@ -1,28 +1,23 @@
 <template>
     <div class="units-table">
-        <UnitsTableRow
-            v-for="unit in props.units"
-            :key="unit.id"
-            :unit="unit"
-            @open-delete-popup="(unit) => emit('open-delete-popup', unit)"
+        <UnitCategoriesTableRow 
+            v-for="unitCategory in props.unitCategories"
+            :key="unitCategory.id"
+            :unit-category="unitCategory"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-    import { Unit } from './units-models';
+    import { UnitCategoryForUnitsPage } from './units-models';
 
-    import UnitsTableRow from './UnitsTableRow.vue';
+    import UnitCategoriesTableRow from './UnitCategoriesRow.vue';
 
     interface Props {
-        units: Unit[] | undefined
+        unitCategories: UnitCategoryForUnitsPage[] | undefined
     }
 
     const props = defineProps<Props>();
-
-    const emit = defineEmits<{
-        'open-delete-popup': [unit: Unit]
-    }>();
 </script>
 
 <style lang="scss">
@@ -31,6 +26,6 @@
         flex-direction: column;
         gap: 10px;
         width: 100%;
-        height: 600px;
+        min-height: 575px;
     }
 </style>

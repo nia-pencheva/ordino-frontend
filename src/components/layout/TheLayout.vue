@@ -22,7 +22,7 @@
 <style lang="scss">
     .the-layout {
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
     }
 
     .the-layout__content {
@@ -30,7 +30,7 @@
         flex-direction: column;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px 10px 20px 45px;
+        padding: 68px 10px 20px 45px;
         min-height: calc(100vh - 48px);
     }
 </style>
