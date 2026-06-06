@@ -30,11 +30,13 @@
         @include glass-texture;
         @include glass-gray-shadow;
         
-        position: sticky;
+        z-index: 900;
+        position: fixed;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
         padding: 10px 10px 10px 45px;
         background-color: $lightGray;
     }

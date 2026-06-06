@@ -3,8 +3,8 @@
         <TheTitle>Units</TheTitle>
 
         <div class="units-view__toolbar">
-            <TheButton @click="router.push('/units/add')">
-                Add
+            <TheButton @click="router.push('/unit-categories/add')">
+                Add Category
             </TheButton>
         </div>
 
@@ -18,8 +18,7 @@
             <template v-else>
                 <UnitsTable
                     v-if="(unitsPage?.totalElements ?? 0) > 0"
-                    :units="unitsPage?.units"
-                    @open-delete-popup="openDeletePopup"
+                    :unitCategories="unitsPage?.unitCategories"
                 />
 
                 <div
@@ -39,17 +38,24 @@
         </div>
 
         <DeleteUnitPopup
-            v-if="deletePopup != undefined"
-            :unit="deletePopup"
-            @close="deletePopup = undefined"
-            @deleted-unit="handleDeleted"
+            v-if="deleteUnitPopup != undefined"
+            :unit="deleteUnitPopup"
+            @close="deleteUnitPopup = undefined"
+            @deleted-unit="handleUnitDeleted"
+        />
+
+        <DeleteUnitCategoryPopup 
+            v-if="deleteUnitCategoryPopup != undefined"
+            :unit-category="deleteUnitCategoryPopup"
+            @close="deleteUnitCategoryPopup = undefined"
+            @deleted-unit-category="handleUnitCategoryDeleted"
         />
     </TheLayout>
 </template>
 
 <script setup lang="ts">
-    import { computed, onMounted, ref } from 'vue';
-    import { Unit, UnitsPage } from '@/components/units/units-models';
+    import { computed, onMounted, provide, ref } from 'vue';
+    import { UnitForUnitsPage, UnitCategoryForUnitsPage, UnitsPage } from '@/components/units/units-models';
     import { APICall } from '@/service/api/api';
 
     import TheLayout from '@/components/layout/TheLayout.vue';
@@ -59,6 +65,7 @@
     import ThePager from '@/components/base/ThePager.vue';
     import UnitsTable from '@/components/units/UnitsTable.vue';
     import DeleteUnitPopup from '@/components/units/DeleteUnitPopup.vue';
+    import DeleteUnitCategoryPopup from '@/components/units/DeleteUnitCategoryPopup.vue';
 
     import router from '@/router';
 
@@ -67,16 +74,26 @@
     const unitsPage = ref<UnitsPage | undefined>(undefined);
     const currentPage = ref<number>(1);
 
-    const deletePopup = ref<Unit | undefined>(undefined);
+    const deleteUnitPopup = ref<UnitForUnitsPage | undefined>(undefined);
+    const deleteUnitCategoryPopup = ref<UnitCategoryForUnitsPage | undefined>(undefined);
 
     const loaded = computed<boolean>(() => unitsPage.value != undefined);
 
-    function openDeletePopup(unit: Unit) {
-        deletePopup.value = unit;
+    function openDeleteUnitPopup(unit: UnitForUnitsPage) {
+        deleteUnitPopup.value = unit;
     }
 
-    async function handleDeleted() {
-        deletePopup.value = undefined;
+    function openDeleteUnitCategoryPopup(unitCategory: UnitCategoryForUnitsPage) {
+        deleteUnitCategoryPopup.value = unitCategory;
+    }
+
+    async function handleUnitDeleted() {
+        deleteUnitPopup.value = undefined;
+        await fetchUnits();
+    }
+
+    async function handleUnitCategoryDeleted() {
+        deleteUnitCategoryPopup.value = undefined;
         currentPage.value = 1;
         await fetchUnits();
     }
@@ -100,6 +117,9 @@
     onMounted(async () => {
         await fetchUnits();
     });
+
+    provide('openDeleteUnitPopup', openDeleteUnitPopup);
+    provide('openDeleteUnitCategoryPopup', openDeleteUnitCategoryPopup);
 </script>
 
 <style lang="scss">
@@ -110,7 +130,7 @@
     }
 
     .units-view__toolbar .the-button {
-        width: 75px;
+        width: 110px;
         padding: 4px;
     }
 
@@ -119,6 +139,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 20px;
     }
 
     .units-view__loader {

@@ -1,10 +1,10 @@
 <template>
-    <div class="delete-unit-popup__overlay">
+    <div class="delete-unit-category-popup__overlay">
         <TheWindow>
-            <div class="delete-unit-popup__content">
-                <p>Delete unit <b>{{ props.unit.unit }}</b>?</p>
+            <div class="delete-unit-category-popup__content">
+                <p>Delete unit category <b>{{ props.unitCategory.category }}</b>?</p>
 
-                <div class="delete-unit-popup__buttons">
+                <div class="delete-unit-category-popup__buttons">
                     <TheButton @click="handleConfirm">Confirm</TheButton>
                     <TheButton type="important" @click="emit('close')">Cancel</TheButton>
                 </div>
@@ -15,27 +15,27 @@
 
 <script setup lang="ts">
     import { APICall } from '@/service/api/api';
-    import { UnitForUnitsPage } from './units-models';
+    import { UnitCategoryForUnitsPage } from './units-models';
 
     import TheWindow from '../base/TheWindow.vue';
     import TheButton from '../base/TheButton.vue';
 
     interface Props {
-        unit: UnitForUnitsPage
+        unitCategory: UnitCategoryForUnitsPage
     }
 
     const props = defineProps<Props>();
 
-    const emit = defineEmits(['close', 'deleted-unit']);
+    const emit = defineEmits(['close', 'deleted-unit-category']);
 
     async function handleConfirm() {
-        await (new APICall(`units/${props.unit.id}`, 'DELETE')).execute();
-        emit('deleted-unit');
+        await (new APICall(`unit-categories/${props.unitCategory.id}`, 'DELETE')).execute();
+        emit('deleted-unit-category');
     }
 </script>
 
 <style lang="scss">
-    .delete-unit-popup__overlay {
+    .delete-unit-category-popup__overlay {
         position: fixed;
         top: 0;
         left: 0;
@@ -48,7 +48,7 @@
         z-index: 1000;
     }
 
-    .delete-unit-popup__content {
+    .delete-unit-category-popup__content {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -56,13 +56,13 @@
         min-width: 200px;
     }
 
-    .delete-unit-popup__buttons {
+    .delete-unit-category-popup__buttons {
         display: flex;
         flex-direction: row;
         gap: 8px;
     }
 
-    .delete-unit-popup__buttons .the-button {
+    .delete-unit-category-popup__buttons .the-button {
         padding: 4px 12px;
     }
 </style>
