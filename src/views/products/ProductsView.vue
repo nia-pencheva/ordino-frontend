@@ -244,6 +244,7 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+        gap: 20px;
     }
 
     .products-view__tab__wrapper {
