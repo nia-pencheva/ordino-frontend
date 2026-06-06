@@ -1,8 +1,5 @@
 <template>
-    <TheForm
-        class="product-form"
-        @enter-pressed="handleSubmit"
-    >
+    <TheForm class="product-form">
         <FormElement
             id="name"
             :errors="errors?.getByField('name')"
@@ -35,17 +32,27 @@
 
         <br />
 
-        <TheButton
-            @click="handleSubmit()"
-            class="product-form__submit"
-            :disabled="submitting"
-        >
-            <span :class="{ 'product-form__submit-label--hidden': submitting }">
-                <span v-if="route.name == 'add-product'">Add</span>
-                <span v-if="route.name == 'edit-product'">Save</span>
-            </span>
-            <TheSpinner v-if="submitting" size="xs" class="product-form__spinner" />
-        </TheButton>
+        <div class="product-form__buttons__wrapper">
+            <TheButton
+                @click="handleSubmit()"
+                class="product-form__button"
+                :disabled="submitting"
+            >
+                <span :class="{ 'product-form__button-label--hidden': submitting }">
+                    <span v-if="route.name == 'add-product'">Add</span>
+                    <span v-if="route.name == 'edit-product'">Save</span>
+                </span>
+                <TheSpinner v-if="submitting" size="xs" class="product-form__spinner" />
+            </TheButton>
+
+            <TheButton
+                @click="router.back()"
+                class="product-form__button"
+                type="important"
+            >
+                Cancel
+            </TheButton>
+        </div>
     </TheForm>
 </template>
 
@@ -117,14 +124,20 @@
         width: 100%;
     }
 
-    .product-form__submit {
+    .product-form__buttons__wrapper {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .product-form__button {
         width: 75px;
         padding: 4px;
         position: relative;
         overflow: hidden;
     }
 
-    .product-form__submit-label--hidden {
+    .product-form__button-label--hidden {
         visibility: hidden;
     }
 
