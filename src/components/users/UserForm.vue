@@ -2,7 +2,6 @@
     <TheForm 
         v-if="initialPassword == undefined"
         class="user-form"
-        @enter-pressed="handleSubmit"    
     >
         <FormElement 
             id="username"
@@ -89,13 +88,28 @@
 
         <br />
 
-        <TheButton
-            @click="handleSubmit()" 
-            class="user-form__submit-form"
-        >
-            <span v-if="route.name == 'add-user'">Add</span>
-            <span v-if="route.name == 'edit-user'">Save</span>
-        </TheButton>
+        <div class="user-form__buttons__wrapper">
+            <TheButton
+                @click="handleSubmit()" 
+                class="user-form__button"
+                :disabled="submitting"
+            >
+                <span :class="{ 'user-form__button-label--hidden': submitting }">
+                    <span v-if="route.name == 'add-user'">Add</span>
+                    <span v-if="route.name == 'edit-user'">Save</span>
+                </span>
+                <TheSpinner v-if="submitting" size="xs" class="user-form__spinner" />
+            </TheButton>
+
+            <TheButton
+                @click="router.back()"
+                class="user-form__button"
+                type="important"
+            >
+                Cancel
+            </TheButton>
+        </div>
+        
     </TheForm>
 
     <TheWindow v-else>
@@ -135,6 +149,7 @@
     import TheCheckbox from '../base/TheCheckbox.vue';
     import TheButton from '../base/TheButton.vue';
     import TheWindow from '../base/TheWindow.vue';
+    import TheSpinner from '../base/TheSpinner.vue';
     
     const route = useRoute();
     const router = useRouter();
@@ -154,12 +169,15 @@
     const roles = ref<string[]>(props.user?.roles ?? []);
     const errors = ref<UnprocessableContentError | undefined>(undefined);
     const initialPassword = ref<string | undefined>(undefined);
+    const submitting = ref<boolean>(false);
 
     const disableAdminRole = computed<boolean>(() => {
         return (auth.user?.username == props.user?.username && auth.user?.hasRoles([ Role.ADMIN ])) ?? false;
     });
 
     async function handleSubmit() {
+        submitting.value = true;
+
         try {
             const data = {
                 username: username.value.trim(),
@@ -180,6 +198,8 @@
             if(error instanceof UnprocessableContentError) {
                 errors.value = error; 
             }
+        } finally {
+            submitting.value = false;
         }
     }
 
@@ -217,9 +237,28 @@
         text-transform: capitalize;
     }
 
-    .user-form__submit-form {
+    .user-form__buttons__wrapper {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .user-form__button {
         width: 75px;
         padding: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .user-form__button-label--hidden {
+        visibility: hidden;
+    }
+
+    .user-form__spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .user-form__initial-password-popup__content {
