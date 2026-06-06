@@ -32,5 +32,6 @@
         flex-direction: column;
         gap: 10px;
         width: 100%;
+        min-height: 575px;
     }
 </style>
