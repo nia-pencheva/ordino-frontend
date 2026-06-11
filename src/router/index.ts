@@ -58,6 +58,62 @@ const routes: Array<RouteRecordRaw> = [
     name: "recipes",
     component: () => import("@/views/recipes/RecipesView.vue"),
   },
+  /* Ingredient Categories */
+  {
+    path: "/recipes/ingredient-categories",
+    name: "recipe-ingredient-categories",
+    component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoriesView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+    children: [
+      {
+        path: ":id",
+        name: "recipe-ingredient-category-detail",
+        component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoryDetailView.vue")
+      }
+    ]
+  },
+  {
+    path: "/recipes/ingredient-categories/add",
+    name: "add-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/add",
+    name: "add-recipe-ingredient-subcategory",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/edit",
+    name: "edit-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/EditRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-catgories/:id/move",
+    name: "move-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/MoveRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    }
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/add-ingredient",
+    name: "add-recipe-ingredient-category-product",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryProductView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    }
+  },
   // Products
   {
     path: "/products",

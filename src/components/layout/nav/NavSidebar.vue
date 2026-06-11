@@ -34,6 +34,19 @@
             >
                 Units
             </NavItem>
+            <NavItemExpandable
+                v-if="auth.user?.hasRoles([ Role.CHEF, Role.LINE_COOK ])"
+                icon-src="/images/icons/recipes.png"
+                :icon-styles="[ 'nav-item__icon--recipes' ]"
+            >
+                Recipes
+                <template #submenu>
+                    <NavSubItem link="/recipes">All Recipes</NavSubItem>
+                    <NavSubItem link="/recipe-categories">Recipe Categories</NavSubItem>
+                    <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
+                    <NavSubItem link="/recipe-log">Log</NavSubItem>
+                </template>
+            </NavItemExpandable>
         </div>
     </div>
 </template>
@@ -45,6 +58,8 @@
 
     import TheButton from '../../base/TheButton.vue';
     import NavItem from './NavItem.vue';
+    import NavItemExpandable from './NavItemExpandable.vue';
+    import NavSubItem from './NavSubItem.vue';
 
     const auth = useAuth();
 
@@ -121,6 +136,11 @@
         }
 
         &--units {
+            height: 15px;
+            width: 15px;
+        }
+
+        &--recipes {
             height: 15px;
             width: 15px;
         }
