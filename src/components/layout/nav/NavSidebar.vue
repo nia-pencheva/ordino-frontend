@@ -44,7 +44,20 @@
                     <NavSubItem link="/recipes">All Recipes</NavSubItem>
                     <NavSubItem link="/recipes/categories">Recipe Categories</NavSubItem>
                     <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
-                    <NavSubItem link="/recipe-log">Log</NavSubItem>
+                    <NavSubItem link="/recipes/log">Log</NavSubItem>
+                </template>
+            </NavItemExpandable>
+            <NavItemExpandable
+                v-if="auth.user?.hasRoles([ Role.WAREHOUSE_MANAGER ])"
+                icon-src="/images/icons/warehouse.png"
+                :icon-styles="[ 'nav-item__icon--warehouse' ]"
+            >
+                Warehouse
+                <template #submenu>
+                    <NavSubItem link="/warehouse">Stock</NavSubItem>
+                    <NavSubItem link="/warehouse/products">Products</NavSubItem>
+                    <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
+                    <NavSubItem link="/warehouse/logs">Logs</NavSubItem>
                 </template>
             </NavItemExpandable>
         </div>
@@ -143,6 +156,11 @@
         &--recipes {
             height: 15px;
             width: 15px;
+        }
+
+        &--warehouse {
+            height: 12px;
+            width: 12px;
         }
     }
 </style>
