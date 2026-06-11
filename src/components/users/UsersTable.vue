@@ -3,8 +3,6 @@
         <UsersTableRow
             v-for="user in users"
             :user="user"
-            @open-reset-password-popup="(id, username) => emit('open-reset-password-popup', id, username)"
-            @open-delete-popup="(id, username) => emit('open-delete-popup', id, username)"
         />
     </div>
 </template>
@@ -19,11 +17,6 @@
     }
 
     const props = defineProps<Props>();
-
-    const emit = defineEmits<{
-        'open-reset-password-popup': [id: Number, username: string]
-        'open-delete-popup': [id: Number, username: string]
-    }>();
 </script>
 
 <style lang="scss">
@@ -32,6 +25,6 @@
         flex-direction: column;
         gap: 10px;
         width: 100%;
-        min-height: 575px;
+        min-height: $tableMinHeight;
     }
 </style>

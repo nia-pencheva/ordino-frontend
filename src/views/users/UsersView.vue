@@ -2,45 +2,64 @@
     <TheLayout>
         <TheTitle>Users</TheTitle>
 
-        <TheButton
-            @click="router.push('/users/add')"
-            class="users-view__add-button"
-        >
-            Add
-        </TheButton>
+        <div class="users-view__toolbar">
+            <TheSearchbar
+                v-model="search"
+                class="users-view__search"
+            />
 
-        <div class="users-view__loader" v-if="!loaded">
+            <div class="users-view__toolbar__buttons">
+                <TheSelect
+                    v-model="roleId"
+                    :options="roleOptions ?? []"
+                    placeholder="All roles"
+                    :disabled="roleOptions == undefined || usersPage == undefined"
+                    class="users-view__role-select"
+                />
+
+                <TheButton
+                    @click="router.push('/users/add')"
+                    class="users-view__add-button"
+                >
+                    Add
+                </TheButton>
+            </div>
+           
+        </div>
+
+        <div class="users-view__loader" v-if="usersPage == undefined">
             <TheSpinner size="lg"/>
         </div>
 
-        <UsersTable
-            v-else
-            :users="users"
-            @open-reset-password-popup="openResetPasswordPopup"
-            @open-delete-popup="openDeletePopup"
-        />
+        <template v-else>
+            <div
+                v-if="usersPage?.totalElements != 0"
+                class="users-view__results"
+            >
+                <UsersTable :users="usersPage?.users" />
 
-        <ResetPasswordPopup
-            v-if="resetPasswordPopup != undefined"
-            :user-id="resetPasswordPopup.userId"
-            :username="resetPasswordPopup.username"
-            @close="resetPasswordPopup = undefined"
-        />
-
-        <DeleteUserPopup
-            v-if="deletePopup != undefined"
-            :user-id="deletePopup.userId"
-            :username="deletePopup.username"
-            @close="deletePopup = undefined"
-            @deleted="handleUserDeleted"
-        />
+                <ThePager 
+                    v-if="(usersPage?.totalElements ?? 0) > pageSize"
+                    :current-page="currentPage"
+                    :total-pages="usersPage?.totalPages"
+                    @previous="getPreviousPage"
+                    @next="getNextPage"
+                />
+            </div>
+            <div
+                v-else
+                class="users-view__not-results"
+            >
+                <p>No users found</p>
+            </div>
+        </template>
     </TheLayout>
 </template>
 
 <script setup lang="ts">
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import router from '@/router';
-    import { User } from '@/components/users/users-models';
+    import { User, UserRole, UsersPage } from '@/components/users/users-models';
     import { APICall } from '@/service/api/api';
 
     import TheSpinner from '@/components/base/TheSpinner.vue';
@@ -48,40 +67,105 @@
     import TheTitle from '@/components/layout/TheTitle.vue';
     import UsersTable from '@/components/users/UsersTable.vue';
     import TheButton from '@/components/base/TheButton.vue';
-    import ResetPasswordPopup from '@/components/users/ResetPasswordPopup.vue';
-    import DeleteUserPopup from '@/components/users/DeleteUserPopup.vue';
+    import TheSearchbar from '@/components/base/TheSearchbar.vue';
+    import ThePager from '@/components/base/ThePager.vue';
+    import TheSelect, { type SelectOption } from '@/components/base/TheSelect.vue';
 
-    const users = ref<User[] | undefined>(undefined);
-    const resetPasswordPopup = ref<{ userId: Number; username: string } | undefined>(undefined);
-    const deletePopup = ref<{ userId: Number; username: string } | undefined>(undefined);
+    const pageSize = 10;
 
-    const loaded = computed<boolean>(() => {
-        return users.value != undefined;
-    });
+    const usersPage = ref<UsersPage | undefined>(undefined);
+    const search = ref<string>('');
+    const roleId = ref<string | number | null>(null);
+    const currentPage = ref<number>(1);
+
+    const roleOptions = ref<SelectOption[] | undefined>(undefined);
+
+    let debounceTimer: ReturnType<typeof setTimeout>;
+
+    watch(search, () => {
+        clearTimeout(debounceTimer);
+        currentPage.value = 1;
+        usersPage.value = undefined;
+        debounceTimer = setTimeout(fetchUsers, 400);
+    })
+
+    watch(roleId, () => {
+        currentPage.value = 1;
+        usersPage.value = undefined;
+        fetchUsers();
+    })
 
     async function fetchUsers() {
-        users.value = await (new APICall<User[]>("users")).execute();
+        let path = `users?page=${currentPage.value}&pageSize=${pageSize}`;
+
+        if(search.value.trim()) {
+            path += `&search=${encodeURIComponent(search.value.trim())}`;
+        }
+
+        if(roleId.value) {
+            path += `&roleId=${roleId.value}`;
+        }
+
+        usersPage.value = await (new APICall<UsersPage>(path)).execute();
     }
 
-    function openResetPasswordPopup(userId: Number, username: string) {
-        resetPasswordPopup.value = { userId, username };
+    async function fetchRoles() {
+        const roles = await (new APICall<UserRole[]>('users/roles')).execute();
+        roleOptions.value = [
+            { value: 0, label: 'All roles' },
+            ...roles.map(r => ({ value: r.id, label: r.role }))
+        ]
     }
 
-    function openDeletePopup(userId: Number, username: string) {
-        deletePopup.value = { userId, username };
-    }
-
-    async function handleUserDeleted() {
-        deletePopup.value = undefined;
+    async function getNextPage() {
+        currentPage.value++;
+        usersPage.value = undefined;
         await fetchUsers();
     }
 
+    async function getPreviousPage() {
+        currentPage.value--;
+        usersPage.value = undefined;
+        await fetchUsers();
+    }
     onMounted(async () => {
         await fetchUsers();
+        await fetchRoles();
     });
 </script>
 
 <style lang="scss">
+    .users-view__toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .users-view__toolbar__buttons {
+        display: flex; 
+        flex-direction: row; 
+        align-items: center;
+        gap: 10px;
+    }
+
+    .users-view__search {
+        min-width: 300px;
+    }
+
+    .users-view__role-select {
+        width: 140px;
+        flex-shrink: 0;
+    }
+
+    .users-view__add-button {
+        width: 75px;
+        padding: 4px;
+        flex-shrink: 0;
+    }
+
     .users-view__loader {
         flex: 1;
         display: flex;
@@ -89,9 +173,23 @@
         justify-content: center;
     }
 
-    .users-view__add-button {
-        width: 75px;
-        padding: 4px;
-        margin-bottom: 20px;
+    .users-view__results {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 20px;
+    }
+
+    .users-view__not-results {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        p {
+            font-weight: bold;
+        }
     }
 </style>

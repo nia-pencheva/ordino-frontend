@@ -1,11 +1,23 @@
+export interface UsersPage {
+    users: User[]
+    roles: UserRole[]
+    totalElements: number
+    totalPages: number
+}
+
 export interface User {
-    id: Number
+    id: number
     username: string
     fullName: string
     email: string
     phoneNumber: string
     roles: string[]
 };
+
+export interface UserRole {
+    id: number
+    role: string
+}
 
 export enum Role {
     ADMIN = "admin",

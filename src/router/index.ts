@@ -37,6 +37,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/users/:id",
+    name: "user-info",
+    component: () => import("@/views/users/UserInfoView.vue"),
+    meta: {
+      roles: [ Role.ADMIN ]
+    }
+  },
+  {
     path: "/users/add",
     name: "add-user",
     component: () => import("@/views/users/AddUserView.vue"),
@@ -45,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/users/:id",
+    path: "/users/:id/edit",
     name: "edit-user",
     component: () => import("@/views/users/EditUserView.vue"),
     meta: {
