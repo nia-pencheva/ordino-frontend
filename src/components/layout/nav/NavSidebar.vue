@@ -42,7 +42,7 @@
                 Recipes
                 <template #submenu>
                     <NavSubItem link="/recipes">All Recipes</NavSubItem>
-                    <NavSubItem link="/recipe-categories">Recipe Categories</NavSubItem>
+                    <NavSubItem link="/recipes/categories">Recipe Categories</NavSubItem>
                     <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
                     <NavSubItem link="/recipe-log">Log</NavSubItem>
                 </template>
