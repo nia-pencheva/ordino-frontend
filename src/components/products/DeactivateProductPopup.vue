@@ -2,7 +2,7 @@
     <div class="deactivate-product-popup__overlay">
         <TheWindow>
             <div class="deactivate-product-popup__content">
-                <p>Deactivate product <b>{{ props.product.name }}</b>?</p>
+                <p>Deactivate product <b>{{ props.product?.name }}</b>?</p>
 
                 <div class="deactivate-product-popup__buttons">
                     <TheButton @click="handleConfirm">Confirm</TheButton>
@@ -21,14 +21,14 @@
     import TheButton from '../base/TheButton.vue';
 
     interface Props {
-        product: Product
+        product?: Product
     }
 
     const props = defineProps<Props>();
     const emit = defineEmits(['close', 'deactivated-product']);
 
     async function handleConfirm() {
-        await (new APICall(`products/${props.product.id}/deactivate`, 'POST')).execute();
+        await (new APICall(`products/${props.product?.id}/deactivate`, 'POST')).execute();
         emit('deactivated-product');
     }
 </script>

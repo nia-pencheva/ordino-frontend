@@ -2,7 +2,7 @@
     <div class="delete-product-popup__overlay">
         <TheWindow>
             <div class="delete-product-popup__content">
-                <p>Delete product <b>{{ props.product.name }}</b>?</p>
+                <p>Delete product <b>{{ props.product?.name }}</b>?</p>
 
                 <div class="delete-product-popup__buttons">
                     <TheButton @click="handleConfirm">Confirm</TheButton>
@@ -21,14 +21,14 @@
     import TheButton from '../base/TheButton.vue';
 
     interface Props {
-        product: Product
+        product?: Product
     }
 
     const props = defineProps<Props>();
     const emit = defineEmits(['close', 'deleted-product']);
 
     async function handleConfirm() {
-        await (new APICall(`products/${props.product.id}`, 'DELETE')).execute();
+        await (new APICall(`products/${props.product?.id}`, 'DELETE')).execute();
         emit('deleted-product');
     }
 </script>

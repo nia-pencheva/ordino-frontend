@@ -4,9 +4,6 @@
             v-for="product in products"
             :key="product.id"
             :product="product"
-            @activated-product="() => emit('activated-product')"
-            @open-deactivate-popup="(product) => emit('open-deactivate-popup', product)"
-            @open-delete-popup="(product) => emit('open-delete-popup', product)"
         />
     </div>
 </template>
@@ -20,12 +17,6 @@
     }
 
     const props = defineProps<Props>();
-
-    const emit = defineEmits<{
-        'open-deactivate-popup': [product: Product]
-        'open-delete-popup': [product: Product]
-        'activated-product': []
-    }>();
 </script>
 
 <style lang="scss">
@@ -34,6 +25,6 @@
         flex-direction: column;
         gap: 10px;
         width: 100%;
-        min-height: 575px;
+        min-height: $tableMinHeight;
     }
 </style>
