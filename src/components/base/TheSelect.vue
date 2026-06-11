@@ -7,13 +7,33 @@
 
         <div v-if="isOpen" class="the-select__dropdown">
             <div
-                v-for="option in props.options"
-                :key="option.value"
-                class="the-select__option"
-                :class="{ 'the-select__option--selected': option.value === model }"
-                @click="select(option)"
+                v-if="isMultiLevel && navigationStack.length > (props.rootParent ? 1 : 0)"
+                class="the-select__option the-select__option--back"
+                @click="goBack"
             >
-                {{ option.label }}
+                <span class="the-select__chevron-left"></span>
+                Back
+            </div>
+            <div
+                v-if="currentParent"
+                class="the-select__option the-select__option--current-parent"
+                :class="{ 'the-select__option--selected': currentParent.value === model }"
+                @click="select(currentParent)"
+            >
+                <span class="the-select__option__label">{{ currentParent.label }}</span>
+            </div>
+            <div
+                v-for="option in currentOptions"
+                :key="option.value ?? -1"
+                class="the-select__option"
+                :class="{
+                    'the-select__option--selected': option.value === model,
+                    'the-select__option--has-children': !!option.children?.length
+                }"
+                @click="handleOptionClick(option)"
+            >
+                <span class="the-select__option__label">{{ option.label }}</span>
+                <span v-if="option.children?.length" class="the-select__chevron-right"></span>
             </div>
         </div>
     </div>
@@ -25,36 +45,102 @@
     export interface SelectOption {
         value: string | number
         label: string
+        children?: SelectOption[]
     }
 
     interface Props {
         options: SelectOption[]
         placeholder?: string
         disabled?: boolean
+        rootParent?: SelectOption
     }
 
     const props = defineProps<Props>()
     const model = defineModel<string | number | null>()
 
+    interface NavigationLevel {
+        parent: SelectOption
+        children: SelectOption[]
+    }
+
     const isOpen = ref(false)
+    const navigationStack = ref<NavigationLevel[]>([])
+
+    const isMultiLevel = computed(() => props.options.some(o => o.children && o.children.length > 0))
+
+    const currentParent = computed(() =>
+        navigationStack.value[navigationStack.value.length - 1]?.parent ?? props.rootParent ?? null
+    )
+
+    const currentOptions = computed(() => {
+        if (navigationStack.value.length === 0) return props.options
+        return navigationStack.value[navigationStack.value.length - 1].children
+    })
 
     const selectedLabel = computed(() => {
-        const match = props.options.find(o => o.value === model.value)
-        return match ? match.label : (props.placeholder ?? 'Select...')
+        if (model.value == null) return props.placeholder ?? 'Select...'
+        if (props.rootParent && model.value === props.rootParent.value) return props.rootParent.label
+        const label = findLabel(props.options, model.value)
+        return label ?? (props.placeholder ?? 'Select...')
     })
+
+    function findLabel(options: SelectOption[], value: string | number): string | null {
+        for (const option of options) {
+            if (option.value === value) return option.label
+            if (option.children?.length) {
+                const found = findLabel(option.children, value)
+                if (found) return found
+            }
+        }
+        return null
+    }
 
     function toggle() {
         isOpen.value = !isOpen.value
+        if (!isOpen.value) {
+            navigationStack.value = []
+        } else if (props.rootParent) {
+            const found = findOptionInTree(props.options, props.rootParent.value)
+            const children = found?.children ?? props.options
+            navigationStack.value = [{ parent: props.rootParent, children }]
+        }
+    }
+
+    function findOptionInTree(options: SelectOption[], value: string | number): SelectOption | null {
+        for (const opt of options) {
+            if (opt.value === value) return opt
+            if (opt.children?.length) {
+                const found = findOptionInTree(opt.children, value)
+                if (found) return found
+            }
+        }
+        return null
     }
 
     function select(option: SelectOption) {
         model.value = option.value
         isOpen.value = false
+        navigationStack.value = []
+    }
+
+    function handleOptionClick(option: SelectOption) {
+        if (option.children?.length) {
+            navigationStack.value = [...navigationStack.value, { parent: option, children: option.children }]
+        } else {
+            select(option)
+        }
+    }
+
+    function goBack() {
+        navigationStack.value = navigationStack.value.slice(0, -1)
     }
 
     function onClickOutside(e: MouseEvent) {
-        const el = (e.target as HTMLElement).closest('.the-select')
-        if (!el) isOpen.value = false
+        const inside = e.composedPath().some(el => el instanceof HTMLElement && el.classList.contains('the-select'))
+        if (!inside) {
+            isOpen.value = false
+            navigationStack.value = []
+        }
     }
 
     onMounted(() => document.addEventListener('click', onClickOutside))
@@ -130,6 +216,12 @@
         white-space: nowrap;
     }
 
+    .the-select__option__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     .the-select__arrow {
         flex-shrink: 0;
         width: 0;
@@ -142,6 +234,24 @@
         .the-select--open & {
             transform: rotate(180deg);
         }
+    }
+
+    .the-select__chevron-right {
+        flex-shrink: 0;
+        width: 0;
+        height: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-left: 5px solid rgba(60, 60, 60, 0.75);
+    }
+
+    .the-select__chevron-left {
+        flex-shrink: 0;
+        width: 0;
+        height: 0;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        border-right: 5px solid rgba(60, 60, 60, 0.60);
     }
 
     .the-select__dropdown {
@@ -160,12 +270,20 @@
     }
 
     .the-select__option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
         padding: 4px 6px;
         cursor: pointer;
 
         &:hover {
             background-color: rgba(60, 110, 190, 0.85);
             color: #fff;
+
+            .the-select__chevron-right {
+                border-left-color: #fff;
+            }
         }
 
         &--selected {
@@ -175,6 +293,28 @@
             &:hover {
                 background-color: rgba(60, 110, 190, 0.85);
                 color: #fff;
+            }
+        }
+
+        &--current-parent {
+            border-bottom: 1px solid #d3d3d3;
+            font-style: italic;
+        }
+
+        &--back {
+            justify-content: flex-start;
+            gap: 6px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #d3d3d3;
+            color: rgba(0, 0, 0, 0.55);
+
+            &:hover {
+                background-color: rgba(60, 110, 190, 0.85);
+                color: #fff;
+
+                .the-select__chevron-left {
+                    border-right-color: #fff;
+                }
             }
         }
     }

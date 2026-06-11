@@ -44,12 +44,8 @@
                     v-if="productsPage?.totalElements != 0"
                     class="products-view__results"
                 >
-                    <ProductsTable
-                        :products="productsPage?.products"
-                        @activated-product="handleActivated"
-                        @open-deactivate-popup="openDeactivatePopup"
-                        @open-delete-popup="openDeletePopup"
-                    />
+                    <ProductsTable :products="productsPage?.products" />
+
                     <ThePager
                         v-if="(productsPage?.totalElements ?? 0) > pageSize"
                         :current-page="currentPage"
@@ -66,20 +62,7 @@
                     <p>No products found</p>
                 </div>
             </template>
-        </div>
-        <DeactivateProductPopup
-            v-if="deactivatePopup != undefined"
-            :product="deactivatePopup"
-            @close="deactivatePopup = undefined"
-            @deactivated-product="handleDeactivated"
-        />
-
-        <DeleteProductPopup
-            v-if="deletePopup != undefined"
-            :product="deletePopup"
-            @close="deletePopup = undefined"
-            @deleted-product="handleDeleted"
-        />
+        </div>        
     </TheLayout>
 </template>
 
@@ -95,8 +78,6 @@
     import TheSearchbar from '@/components/base/TheSearchbar.vue';
     import ProductsTable from '@/components/products/ProductsTable.vue';
     import TheSpinner from '@/components/base/TheSpinner.vue';
-    import DeactivateProductPopup from '@/components/products/DeactivateProductPopup.vue';
-    import DeleteProductPopup from '@/components/products/DeleteProductPopup.vue';
     import ThePager from '@/components/base/ThePager.vue';
 
     const pageSize = 10;
@@ -105,9 +86,6 @@
     const searchName = ref<string>('');
     const active = ref<boolean>(true);
     const currentPage = ref<number>(1);
-
-    const deactivatePopup = ref<Product | undefined>(undefined);
-    const deletePopup = ref<Product | undefined>(undefined);
 
     const loaded = computed<boolean>(() => productsPage.value != undefined);
 
@@ -125,30 +103,6 @@
         productsPage.value = undefined;
         fetchProducts();
     });
-
-    function openDeactivatePopup(product: Product) {
-        deactivatePopup.value = product;
-    }
-
-    function openDeletePopup(product: Product) {
-        deletePopup.value = product;
-    }
-
-    async function handleActivated() {
-        await fetchProducts();
-    }
-
-    async function handleDeactivated() {
-        deactivatePopup.value = undefined;
-        currentPage.value = 1;
-        await fetchProducts();
-    }
-
-    async function handleDeleted() {
-        deletePopup.value = undefined;
-        currentPage.value = 1;
-        await fetchProducts();
-    }
 
     async function fetchProducts() {
         let path = `products?active=${active.value}&page=${currentPage.value}`;

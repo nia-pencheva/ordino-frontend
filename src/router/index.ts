@@ -1,5 +1,6 @@
 import { Role } from "@/components/users/users-models";
 import { useAuth } from "@/store/auth/auth";
+import { useNotFound } from "@/store/not-found/not-found";
 import { createRouter, createWebHistory, RouteLocationNormalizedGeneric, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -36,6 +37,14 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/users/:id",
+    name: "user-info",
+    component: () => import("@/views/users/UserInfoView.vue"),
+    meta: {
+      roles: [ Role.ADMIN ]
+    }
+  },
+  {
     path: "/users/add",
     name: "add-user",
     component: () => import("@/views/users/AddUserView.vue"),
@@ -44,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/users/:id",
+    path: "/users/:id/edit",
     name: "edit-user",
     component: () => import("@/views/users/EditUserView.vue"),
     meta: {
@@ -56,6 +65,62 @@ const routes: Array<RouteRecordRaw> = [
     path: "/recipes",
     name: "recipes",
     component: () => import("@/views/recipes/RecipesView.vue"),
+  },
+  /* Ingredient Categories */
+  {
+    path: "/recipes/ingredient-categories",
+    name: "recipe-ingredient-categories",
+    component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoriesView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+    children: [
+      {
+        path: ":id",
+        name: "recipe-ingredient-category-detail",
+        component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoryDetailView.vue")
+      }
+    ]
+  },
+  {
+    path: "/recipes/ingredient-categories/add",
+    name: "add-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/add",
+    name: "add-recipe-ingredient-subcategory",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/edit",
+    name: "edit-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/EditRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    },
+  },
+  {
+    path: "/recipes/ingredient-catgories/:id/move",
+    name: "move-recipe-ingredient-category",
+    component: () => import("@/views/recipes/ingredient_categories/MoveRecipeIngredientCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    }
+  },
+  {
+    path: "/recipes/ingredient-categories/:id/add-ingredient",
+    name: "add-recipe-ingredient-category-product",
+    component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryProductView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.LINE_COOK ]
+    }
   },
   // Products
   {
@@ -76,6 +141,14 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/products/:id",
+    name: "product-info",
+    component: () => import("@/views/products/ProductInfoView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/products/:id/edit",
     name: "edit-product",
     component: () => import("@/views/products/EditProductView.vue"),
     meta: {
@@ -138,6 +211,7 @@ const router = createRouter({
 
 router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: any) {
   const auth = useAuth();
+  useNotFound().reset();
 
   if(!to.meta.guest && !auth.isAuthenticated) next("/login");
   else if(to.meta.guest && auth.isAuthenticated) next({ name: 'home' });
