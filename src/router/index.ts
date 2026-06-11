@@ -221,6 +221,62 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Warehouse Product Categories
+  {
+    path: "/warehouse/product-categories",
+    name: "warehouse-product-categories",
+    component: () => import("@/views/warehouse/product_categories/WarehouseProductCategoriesView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+    children: [
+      {
+        path: ":id",
+        name: "warehouse-product-category-detail",
+        component: () => import("@/views/warehouse/product_categories/WarehouseProductCategoryDetailView.vue")
+      }
+    ]
+  },
+  {
+    path: "/warehouse/product-categories/add",
+    name: "add-warehouse-product-category",
+    component: () => import("@/views/warehouse/product_categories/AddWarehouseProductCategoryView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/product-categories/:id/add",
+    name: "add-warehouse-product-subcategory",
+    component: () => import("@/views/warehouse/product_categories/AddWarehouseProductCategoryView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/product-categories/:id/edit",
+    name: "edit-warehouse-product-category",
+    component: () => import("@/views/warehouse/product_categories/EditWarehouseProductCategoryView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/product-categories/:id/move",
+    name: "move-warehouse-product-category",
+    component: () => import("@/views/warehouse/product_categories/MoveWarehouseProductCategoryView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/product-categories/:id/add-product",
+    name: "add-warehouse-product-category-product",
+    component: () => import("@/views/warehouse/product_categories/AddWarehouseProductCategoryProductView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",
