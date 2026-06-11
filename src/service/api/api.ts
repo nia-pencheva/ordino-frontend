@@ -1,4 +1,5 @@
 import { useAuth } from "@/store/auth/auth";
+import { useNotFound } from "@/store/not-found/not-found";
 import { HTTPMethod } from "./models/http-methods";
 import router from "@/router";
 import { UnprocessableContentError } from "./models/response-errors";
@@ -61,26 +62,34 @@ export class APICall<TData = unknown> {
     }
 
     private async handleErrors(reason: Response) {
-        const errorResponse = await reason.json();
-
         switch(reason.status) {
+            case 400:
+                this.handleBadRequest();
+                break;
             case 401:
-                await this.handleUnauthorized(errorResponse.error);
+                await this.handleUnauthorized(reason);
                 break;
             case 403:
-                await this.handleForbidden(errorResponse.error);
+                await this.handleForbidden(reason);
                 break;
             case 404:
                 this.handleNotFound();
                 break;
             case 422:
-                throw new UnprocessableContentError(errorResponse.errors);
+                await this.handleUnprocessableContent(reason)
+                break;
             default:
-                throw new Error(errorResponse);
+                throw new Error(await reason.text());
         } 
     }
 
-    private async handleUnauthorized(error: string) {
+    private handleBadRequest() {
+        useNotFound().show();
+    }
+
+    private async handleUnauthorized(reason: Response) {
+        const error = (await reason.json()).error;
+
         switch(error) {
             case "TOKEN_EXPIRED":  
                 await this.handleTokenExpired();
@@ -126,7 +135,9 @@ export class APICall<TData = unknown> {
         this.response = {} as TData; 
     }
 
-    private async handleForbidden(error: string) {
+    private async handleForbidden(reason: Response) {
+        const error = (await reason.json()).error;
+
         switch(error) {
             case "PASSWORD_CHANGE_REQUIRED":
                 await this.handlePasswordChangeRequired();
@@ -149,7 +160,12 @@ export class APICall<TData = unknown> {
     }
 
     private handleNotFound() {
-        router.replace({ name: 'not-found' });
+        useNotFound().show();
+    }
+
+    private async handleUnprocessableContent(reason: Response) {
+        const errors = (await reason.json()).errors;
+        throw new UnprocessableContentError(errors);
     }
 }
 

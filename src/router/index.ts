@@ -1,5 +1,6 @@
 import { Role } from "@/components/users/users-models";
 import { useAuth } from "@/store/auth/auth";
+import { useNotFound } from "@/store/not-found/not-found";
 import { createRouter, createWebHistory, RouteLocationNormalizedGeneric, RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -138,6 +139,7 @@ const router = createRouter({
 
 router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: any) {
   const auth = useAuth();
+  useNotFound().reset();
 
   if(!to.meta.guest && !auth.isAuthenticated) next("/login");
   else if(to.meta.guest && auth.isAuthenticated) next({ name: 'home' });
