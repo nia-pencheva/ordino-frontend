@@ -133,6 +133,14 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/products/:id",
+    name: "product-info",
+    component: () => import("@/views/products/ProductInfoView.vue"),
+    meta: {
+      roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/products/:id/edit",
     name: "edit-product",
     component: () => import("@/views/products/EditProductView.vue"),
     meta: {
