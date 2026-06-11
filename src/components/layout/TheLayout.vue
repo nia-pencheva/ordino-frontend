@@ -31,6 +31,6 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 68px 10px 20px 45px;
-        min-height: calc(100vh - 48px);
+        min-height: 100vh;
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <a
-        @click="!props.disabled && emit('click')"
+        @click="!props.disabled && emit('click', $event)"
         :class="[
             'the-button', props.type ? `the-button--${props.type}` : '', 
             { 'the-button--disabled': props.disabled },
