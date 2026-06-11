@@ -66,6 +66,31 @@ const routes: Array<RouteRecordRaw> = [
     name: "recipes",
     component: () => import("@/views/recipes/RecipesView.vue"),
   },
+  /* Recipe Categories */
+  {
+    path: "/recipes/categories",
+    name: "recipe-categories",
+    component: () => import("@/views/recipes/categories/RecipeCategoriesView.vue"),
+    meta: {
+      roles: [ Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/categories/add",
+    name: "add-recipe-category",
+    component: () => import("@/views/recipes/categories/AddRecipeCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/categories/:id/edit",
+    name: "edit-recipe-category",
+    component: () => import("@/views/recipes/categories/EditRecipeCategoryView.vue"),
+    meta: {
+      roles: [ Role.CHEF ]
+    }
+  },
   /* Ingredient Categories */
   {
     path: "/recipes/ingredient-categories",
