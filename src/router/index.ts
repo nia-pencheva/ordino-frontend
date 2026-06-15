@@ -65,6 +65,63 @@ const routes: Array<RouteRecordRaw> = [
     path: "/recipes",
     name: "recipes",
     component: () => import("@/views/recipes/RecipesView.vue"),
+    meta: {
+      roles: [ Role.KITCHEN_STAFF, Role.LINE_COOK, Role.CHEF, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/recipes/:id",
+    name: "recipe-info",
+    component: () => import("@/views/recipes/RecipeInfoView.vue"),
+  },
+  {
+    path: "/recipes/:id/edit",
+    name: "edit-recipe",
+    component: () => import("@/views/recipes/EditRecipeView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
+  },
+  /* Log */
+  {
+    path: "/recipes/log/:id",
+    name: "recipe-log",
+    component: () => import("@/views/recipes/log/RecipeLogView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/log/edit/:id",
+    name: "recipe-edit-log-info",
+    component: () => import("@/views/recipes/log/edit/RecipeEditLogInfoView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/log/review/submitted-for-approval/:id",
+    name: "recipe-review-submitted-for-approval-log-info",
+    component: () => import("@/views/recipes/log/review/RecipeReviewSubmittedForApprovalLogInfoView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/log/review/returned-for-revision/:id",
+    name: "recipe-review-returned-for-revision-log-info",
+    component: () => import("@/views/recipes/log/review/RecipeReviewReturnedForRevisionLogInfoView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
+  },
+  {
+    path: "/recipes/log/review/approved/:id",
+    name: "recipe-approved-log-info",
+    component: () => import("@/views/recipes/log/review/RecipeReviewApprovedLogInfoView.vue"),
+    meta: {
+      roles: [ Role.LINE_COOK, Role.CHEF ]
+    }
   },
   /* Recipe Categories */
   {
