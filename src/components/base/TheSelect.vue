@@ -1,5 +1,5 @@
 <template>
-    <div class="the-select" :class="{ 'the-select--open': isOpen, 'the-select--disabled': props.disabled }">
+    <div class="the-select" :class="{ 'the-select--open': isOpen, 'the-select--disabled': props.disabled, 'the-select--invalid': props.invalid }">
         <div class="the-select__trigger" @click="!props.disabled && toggle()">
             <span class="the-select__value">{{ selectedLabel }}</span>
             <span class="the-select__arrow"></span>
@@ -17,8 +17,11 @@
             <div
                 v-if="currentParent"
                 class="the-select__option the-select__option--current-parent"
-                :class="{ 'the-select__option--selected': currentParent.value === model }"
-                @click="select(currentParent)"
+                :class="{
+                    'the-select__option--selected': !props.leafOnly && currentParent.value === model,
+                    'the-select__option--non-selectable': props.leafOnly
+                }"
+                @click="!props.leafOnly && select(currentParent)"
             >
                 <span class="the-select__option__label">{{ currentParent.label }}</span>
             </div>
@@ -28,9 +31,10 @@
                 class="the-select__option"
                 :class="{
                     'the-select__option--selected': option.value === model,
-                    'the-select__option--has-children': !!option.children?.length
+                    'the-select__option--has-children': !!option.children?.length,
+                    'the-select__option--disabled': option.disabled
                 }"
-                @click="handleOptionClick(option)"
+                @click="!option.disabled && handleOptionClick(option)"
             >
                 <span class="the-select__option__label">{{ option.label }}</span>
                 <span v-if="option.children?.length" class="the-select__chevron-right"></span>
@@ -46,6 +50,7 @@
         value: string | number
         label: string
         children?: SelectOption[]
+        disabled?: boolean
     }
 
     interface Props {
@@ -53,6 +58,8 @@
         placeholder?: string
         disabled?: boolean
         rootParent?: SelectOption
+        leafOnly?: boolean
+        invalid?: boolean
     }
 
     const props = defineProps<Props>()
@@ -256,12 +263,11 @@
 
     .the-select__dropdown {
         position: absolute;
-        top: 100%;
+        top: 110%;
         left: 0;
         right: 0;
         z-index: 200;
         border: 1px solid rgba(60, 110, 190, 0.70);
-        border-top: none;
         border-radius: 0 0 3px 3px;
         background: #fff;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
@@ -301,6 +307,27 @@
             font-style: italic;
         }
 
+        &--non-selectable {
+            cursor: default;
+            color: rgba(0, 0, 0, 0.45);
+            background-color: #f5f5f5;
+
+            &:hover {
+                background-color: #f5f5f5;
+                color: rgba(0, 0, 0, 0.45);
+            }
+        }
+
+        &--disabled {
+            cursor: default;
+            color: rgba(0, 0, 0, 0.35);
+
+            &:hover {
+                background-color: transparent;
+                color: rgba(0, 0, 0, 0.35);
+            }
+        }
+
         &--back {
             justify-content: flex-start;
             gap: 6px;
@@ -316,6 +343,12 @@
                     border-right-color: #fff;
                 }
             }
+        }
+    }
+
+    .the-select--invalid {
+        .the-select__trigger {
+            border: 2px solid rgba(200, 50, 50, 0.75);
         }
     }
 

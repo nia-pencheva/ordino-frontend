@@ -44,7 +44,6 @@
                     <NavSubItem link="/recipes">All Recipes</NavSubItem>
                     <NavSubItem link="/recipes/categories">Recipe Categories</NavSubItem>
                     <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
-                    <NavSubItem link="/recipes/log">Log</NavSubItem>
                 </template>
             </NavItemExpandable>
             <NavItemExpandable
