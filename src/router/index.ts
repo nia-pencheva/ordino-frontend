@@ -278,7 +278,49 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.CHEF, Role.WAREHOUSE_MANAGER ]
     }
   },
-  // Warehouse Product Categories
+  // Warehouse
+  /* Products */
+  {
+    path: "/warehouse/products",
+    name: "warehouse-products",
+    component: () => import("@/views/warehouse/products/WarehouseProductsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/products/:id",
+    name: "warehouse-product-info",
+    component: () => import("@/views/warehouse/products/WarehouseProductInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/products/addable-products",
+    name: "warehouse-products-addable-products",
+    component: () => import("@/views/warehouse/products/WarehouseProductsAddableProductsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/products/add/:id",
+    name: "add-warehouse-product",
+    component: () => import("@/views/warehouse/products/AddWarehouseProductView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  {
+    path: "/warehouse/products/:id/edit",
+    name: "edit-warehouse-product",
+    component: () => import("@/views/warehouse/products/EditWarehouseProductView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    },
+  },
+  /* Warehouse Product Categories */
   {
     path: "/warehouse/product-categories",
     name: "warehouse-product-categories",
