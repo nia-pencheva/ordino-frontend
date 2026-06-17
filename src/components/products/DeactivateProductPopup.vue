@@ -53,6 +53,7 @@
         align-items: center;
         gap: 20px;
         min-width: 200px;
+        text-align: center;
     }
 
     .deactivate-product-popup__buttons {
