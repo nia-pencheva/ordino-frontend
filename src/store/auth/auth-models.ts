@@ -18,11 +18,13 @@ export interface RefreshResponse {
 }
 
 export class User {
+    id: number;
     username: string;
     name: string;
     roles: Role[];
 
-    constructor(username: string, name: string, roles: Role[]) {
+    constructor(id: number, username: string, name: string, roles: Role[]) {
+        this.id = id;
         this.username = username;
         this.name = name;
         this.roles = roles;
@@ -33,6 +35,6 @@ export class User {
     }
 
     static fromJSON(data: any): User {
-        return new User(data.username, data.name, data.roles);
+        return new User(data.id, data.username, data.name, data.roles);
     }
 }

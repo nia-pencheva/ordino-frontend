@@ -37,6 +37,11 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/current-user",
+    name: "current-user",
+    component: () => import("@/views/users/CurrentUserView.vue")
+  },
+  {
     path: "/users/:id",
     name: "user-info",
     component: () => import("@/views/users/UserInfoView.vue"),
@@ -372,6 +377,71 @@ const routes: Array<RouteRecordRaw> = [
     path: "/warehouse/product-categories/:id/add-product",
     name: "add-warehouse-product-category-product",
     component: () => import("@/views/warehouse/product_categories/AddWarehouseProductCategoryProductView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  /* Suppliers */
+  {
+    path: "/warehouse/suppliers",
+    name: "suppliers",
+    component: () => import("@/views/warehouse/suppliers/SuppliersView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:id",
+    name: "supplier-info",
+    component: () => import("@/views/warehouse/suppliers/SupplierInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/add",
+    name: "add-supplier",
+    component: () => import("@/views/warehouse/suppliers/AddSupplierView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:id/edit",
+    name: "edit-supplier",
+    component: () => import("@/views/warehouse/suppliers/EditSupplierView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:supplierId/addable-products",
+    name: "supplier-addable-products",
+    component: () => import("@/views/warehouse/suppliers/products/SupplierAddableProductsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:supplierId/products/:supplierProductId",
+    name: "supplier-product-info",
+    component: () => import("@/views/warehouse/suppliers/products/SupplierProductInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:id/products/add",
+    name: "add-supplier-product",
+    component: () => import("@/views/warehouse/suppliers/products/AddSupplierProductView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/suppliers/:supplierId/products/:supplierProductId/edit",
+    name: "edit-supplier-product-info",
+    component: () => import("@/views/warehouse/suppliers/products/EditSupplierProductView.vue"),
     meta: {
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
