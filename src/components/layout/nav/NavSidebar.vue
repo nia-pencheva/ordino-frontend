@@ -56,6 +56,7 @@
                     <NavSubItem link="/warehouse">Stock</NavSubItem>
                     <NavSubItem link="/warehouse/products">Products</NavSubItem>
                     <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
+                    <NavSubItem link="/warehouse/suppliers">Suppliers</NavSubItem>
                     <NavSubItem link="/warehouse/logs">Logs</NavSubItem>
                 </template>
             </NavItemExpandable>
