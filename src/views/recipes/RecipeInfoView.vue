@@ -377,7 +377,7 @@ const showHistory = computed(() =>
 )
 
 const showRevisionNotes = computed(() => 
-    isLineCook.value && (recipe.value?.status === 'DRAFT' || recipe.value?.status === 'RETURNED_FOR_REVISION')
+    isLineCook.value && recipe.value?.status === 'RETURNED_FOR_REVISION'
 )
 
 const statusLabel = computed(() => {
