@@ -476,6 +476,31 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Loss Reasons
+  {
+    path: "/warehouse/loss-reasons",
+    name: "loss-reasons",
+    component: () => import("@/views/warehouse/loss_reasons/LossReasonsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/add",
+    name: "add-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/AddLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/:id/edit",
+    name: "edit-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/EditLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",

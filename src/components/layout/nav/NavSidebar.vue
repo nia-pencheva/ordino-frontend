@@ -1,6 +1,7 @@
 <template>
     <div 
         :class="[ sidebarOpen ? 'nav-sidebar--open' : 'nav-sidebar--closed' ]"    
+        ref="sidebar"
     >
         <TheButton
             @click="toggleSidebar" 
@@ -58,8 +59,8 @@
                     <NavSubItem link="/warehouse/products">Products</NavSubItem>
                     <NavSubItem link="/warehouse/suppliers">Suppliers</NavSubItem>
                     <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
-                    <NavSubItem link="/warehouse/suppliers">Loss reasons</NavSubItem>
-                    <NavSubItem link="/warehouse/loss-reasons">Logs</NavSubItem>
+                    <NavSubItem link="/warehouse/loss-reasons">Loss reasons</NavSubItem>
+                    <NavSubItem link="/warehouse/logs">Logs</NavSubItem>
                 </template>
             </NavItemExpandable>
         </div>
@@ -78,11 +79,17 @@
 
     const auth = useAuth();
 
+    const sidebar = ref<HTMLDivElement | null>(null)
     const sidebarOpen = ref<boolean>(false);
 
     function toggleSidebar() {
         sidebarOpen.value = !sidebarOpen.value;
     }
+
+    document.addEventListener("click", (event: MouseEvent) => {
+        if(sidebar.value?.contains(event.target as Node)) return
+        sidebarOpen.value = false;
+    });
 </script>
 
 <style lang="scss">
@@ -93,7 +100,7 @@
         position: fixed;
         z-index: 1000;
         height: 100vh;
-        width: 160px;
+        width: 190px;
         background-color: $midGray;
         border-right: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 0px 5px 5px 0px;
@@ -101,7 +108,7 @@
     }
 
     .nav-sidebar--closed {
-        transform: translateX(-125px);
+        transform: translateX(-155px);
     }
 
     .nav-sidebar--open {
