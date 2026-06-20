@@ -54,10 +54,12 @@
                 Warehouse
                 <template #submenu>
                     <NavSubItem link="/warehouse">Stock</NavSubItem>
+                    <NavSubItem link="/warehouse/orders">Orders</NavSubItem>
                     <NavSubItem link="/warehouse/products">Products</NavSubItem>
-                    <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
                     <NavSubItem link="/warehouse/suppliers">Suppliers</NavSubItem>
-                    <NavSubItem link="/warehouse/logs">Logs</NavSubItem>
+                    <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
+                    <NavSubItem link="/warehouse/suppliers">Loss reasons</NavSubItem>
+                    <NavSubItem link="/warehouse/loss-reasons">Logs</NavSubItem>
                 </template>
             </NavItemExpandable>
         </div>

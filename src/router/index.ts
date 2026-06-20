@@ -443,6 +443,39 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Orders
+  {
+    path: "/warehouse/orders",
+    name: "orders",
+    component: () => import("@/views/warehouse/orders/OrdersView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/orders/:id",
+    name: "order-info",
+    component: () => import("@/views/warehouse/orders/OrderInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/create",
+    name: "create-order",
+    component: () => import("@/views/warehouse/orders/CreateOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/:id/receive",
+    name: "receive-order",
+    component: () => import("@/views/warehouse/orders/ReceiveOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",

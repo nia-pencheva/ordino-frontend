@@ -706,10 +706,6 @@
             0 1px 0 rgba(255, 255, 255, 0.60);
     }
 
-    .supplier-info-view__order-id {
-        font-weight: 600;
-    }
-
     .supplier-info-view__order-date {
         color: rgba(0, 0, 0, 0.55);
         font-size: 13px;
