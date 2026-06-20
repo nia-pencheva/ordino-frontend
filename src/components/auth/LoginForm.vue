@@ -38,11 +38,13 @@
             {{ loginError }}
         </p>
 
-        <TheButton 
+        <TheButton
             @click="handleLogin"
             class="login-form__button"
+            :disabled="submitting"
         >
-            Login
+            <span :class="{ 'login-form__button-label--hidden': submitting }">Login</span>
+            <TheSpinner v-if="submitting" size="xs" class="login-form__spinner" />
         </TheButton>
     </TheForm>
 </template>
@@ -53,6 +55,7 @@
     import { computed, ref } from 'vue';
 
     import TheButton from '../base/TheButton.vue';
+    import TheSpinner from '../base/TheSpinner.vue';
     import TextInput from '../base/TextInput.vue';
     import TheForm from '../base/form/TheForm.vue';
     import FormElement from '../base/form/FormElement.vue';
@@ -62,19 +65,22 @@
     const username = ref<string>("");
     const password = ref<string>("");
     const loginError = ref<string>("");
+    const submitting = ref<boolean>(false);
 
     const hasLoginError = computed<boolean>(() => loginError.value != "");
 
     async function handleLogin() {
+        if (username.value.trim() == "" || password.value.trim() == "") return;
+
+        submitting.value = true;
+
         try {
-            if(username.value.trim() != "" && password.value.trim() != "") {
-                await auth.login({
-                    username: username.value.trim(),
-                    password: password.value.trim()
-                });
-                
-                router.replace({ name: 'home' });   
-            }
+            await auth.login({
+                username: username.value.trim(),
+                password: password.value.trim()
+            });
+
+            router.replace({ name: 'home' });
         }
         catch(error: any) {
             switch(error.message) {
@@ -84,6 +90,9 @@
                 case "PASSWORD_CHANGE_REQUIRED":
                     router.replace({ name: 'change-password' });
             }
+        }
+        finally {
+            submitting.value = false;
         }
     }
 </script>
@@ -116,5 +125,18 @@
     .login-form__button {
         width: 75px;
         padding: 4px 18px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-form__button-label--hidden {
+        visibility: hidden;
+    }
+
+    .login-form__spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 </style>
