@@ -10,7 +10,10 @@
         <template v-else>
             <TheTitle>{{ user.fullName }}</TheTitle>
 
-            <div class="user-info__acitons-toolbar">
+            <div
+                v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
+                class="user-info__acitons-toolbar"
+            >
                 <TheButton
                     class="user-info__actions-toolbar__button"
                     @click="router.push({ name: 'edit-user', params: { id: user.id } })"
@@ -86,7 +89,7 @@ import TheSpinner from '@/components/base/TheSpinner.vue';
 import TheTitle from '@/components/layout/TheTitle.vue';
 import TheButton from '@/components/base/TheButton.vue';
 import router from '@/router';
-import { User } from '@/components/users/users-models';
+import { Role, User } from '@/components/users/users-models';
 import ResetPasswordPopup from '@/components/users/ResetPasswordPopup.vue';
 import DeleteUserPopup from '@/components/users/DeleteUserPopup.vue';
 import { useAuth } from '@/store/auth/auth';

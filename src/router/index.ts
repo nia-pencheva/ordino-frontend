@@ -45,9 +45,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/users/:id",
     name: "user-info",
     component: () => import("@/views/users/UserInfoView.vue"),
-    meta: {
-      roles: [ Role.ADMIN ]
-    }
   },
   {
     path: "/users/add",
