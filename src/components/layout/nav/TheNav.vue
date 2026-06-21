@@ -1,7 +1,5 @@
 <template>
     <div class="the-nav__horizontal-strip">
-        <NavBreadcrumbs />
-
         <div class="the-nav__horizontal-strip__right">
             <RouterLink 
                 :to="{ name: 'current-user' }"
@@ -23,7 +21,6 @@
     import { useAuth } from '@/store/auth/auth';
 
     import TheButton from '../../base/TheButton.vue';
-    import NavBreadcrumbs from './NavBreadcrumbs.vue';
 
     const auth = useAuth();
 
@@ -39,7 +36,7 @@
         position: fixed;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         width: 100%;
         padding: 10px 10px 10px 45px;
