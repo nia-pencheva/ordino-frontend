@@ -7,6 +7,15 @@
             >
                 {{ auth.user?.name }}
             </RouterLink>
+            <RouterLink 
+                :to="{ name: 'notifications' }"
+                class="the-nav__notifications-link"  
+            >
+                <img 
+                    src="/images/icons/notifications.png" 
+                    class="the-nav__notifications-icon"    
+                />
+            </RouterLink>
             <TheButton
                 @click="emit('logging-out')"
                 class="the-nav__logout-button"
@@ -57,6 +66,23 @@
         &:hover {
             opacity: 1;
         }
+    }
+
+    .the-nav__notifications-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        opacity: 0.55;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .the-nav__notifications-icon {
+        width: 15px;
+        height: 15px;
     }
 
     .the-nav__logout-button {
