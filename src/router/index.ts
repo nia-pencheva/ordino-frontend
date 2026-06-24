@@ -443,6 +443,122 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Orders
+  {
+    path: "/warehouse/orders",
+    name: "orders",
+    component: () => import("@/views/warehouse/orders/OrdersView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/orders/:id",
+    name: "order-info",
+    component: () => import("@/views/warehouse/orders/OrderInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/create",
+    name: "create-order",
+    component: () => import("@/views/warehouse/orders/CreateOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/:id/receive",
+    name: "receive-order",
+    component: () => import("@/views/warehouse/orders/ReceiveOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Loss Reasons
+  {
+    path: "/warehouse/loss-reasons",
+    name: "loss-reasons",
+    component: () => import("@/views/warehouse/loss_reasons/LossReasonsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/add",
+    name: "add-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/AddLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/:id/edit",
+    name: "edit-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/EditLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Stock
+  {
+    path: "/warehouse/stock",
+    name: "stock",
+    component: () => import("@/views/warehouse/stock/StockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId",
+    name: "product-stock",
+    component: () => import("@/views/warehouse/stock/ProductStockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId",
+    name: "stock-batch",
+    component: () => import("@/views/warehouse/stock/StockBatchView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/mark-used",
+    name: "mark-stock-quantity-used",
+    component: () => import("@/views/warehouse/stock/MarkStockQuantityUsedView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/write-off",
+    name: "write-off-stock-quantity",
+    component: () => import("@/views/warehouse/stock/WriteOffStockQuantityView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Stock log
+  {
+    path: "/warehouse/stock/log",
+    name: "stock-log",
+    component: () => import("@/views/warehouse/stock/log/StockLogView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/log/:id",
+    name: "stock-log-info",
+    component: () => import("@/views/warehouse/stock/log/StockLogInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",

@@ -9,7 +9,9 @@
 
             <div class="review-log-info__header-meta">
                 <span class="review-log-info__header-time">{{ formatDateTime(entry.createdAt) }}</span>
-                <span>{{ entry.userFullName }}</span>
+                <TheLink @click="router.push({ name: 'user-info', params: { id: entry.userId } })">
+                    {{ entry.userFullName }}
+                </TheLink>
             </div>
 
             <SectionTitle>Revision Notes</SectionTitle>
@@ -30,6 +32,8 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import TheTitle from '@/components/layout/TheTitle.vue'
 import TheSpinner from '@/components/base/TheSpinner.vue'
 import SectionTitle from '@/components/base/SectionTitle.vue'
+import router from '@/router'
+import TheLink from '@/components/base/TheLink.vue'
 
 const route = useRoute()
 
