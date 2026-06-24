@@ -501,6 +501,64 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Stock
+  {
+    path: "/warehouse/stock",
+    name: "stock",
+    component: () => import("@/views/warehouse/stock/StockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId",
+    name: "product-stock",
+    component: () => import("@/views/warehouse/stock/ProductStockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId",
+    name: "stock-batch",
+    component: () => import("@/views/warehouse/stock/StockBatchView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/mark-used",
+    name: "mark-stock-quantity-used",
+    component: () => import("@/views/warehouse/stock/MarkStockQuantityUsedView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/write-off",
+    name: "write-off-stock-quantity",
+    component: () => import("@/views/warehouse/stock/WriteOffStockQuantityView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Stock log
+  {
+    path: "/warehouse/stock/log",
+    name: "stock-log",
+    component: () => import("@/views/warehouse/stock/log/StockLogView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/log/:id",
+    name: "stock-log-info",
+    component: () => import("@/views/warehouse/stock/log/StockLogInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",

@@ -42,26 +42,23 @@
 
                     <div class="order-info-view__meta-row">
                         <span class="order-info-view__label">Placed by</span>
-                        <span
-                            class="order-info-view__link"
-                            @click="router.push({ name: 'user-info', params: { id: order.placedBy.id } })"
-                        >{{ order.placedBy.fullName }}</span>
+                        <TheLink @click="router.push({ name: 'user-info', params: { id: order.placedBy.id } })">
+                            {{ order.placedBy.fullName }}
+                        </TheLink>
                     </div>
 
                     <div v-if="order.finalizedBy" class="order-info-view__meta-row">
                         <span class="order-info-view__label">Finalized by</span>
-                        <span
-                            class="order-info-view__link"
-                            @click="router.push({ name: 'user-info', params: { id: order.finalizedBy.id } })"
-                        >{{ order.finalizedBy.fullName }}</span>
+                        <TheLink @click="router.push({ name: 'user-info', params: { id: order.finalizedBy.id } })">
+                            {{ order.finalizedBy.fullName }}
+                        </TheLink>
                     </div>
 
                     <div class="order-info-view__meta-row">
                         <span class="order-info-view__label">Supplier</span>
-                        <span
-                            class="order-info-view__link"
-                            @click="router.push({ name: 'supplier-info', params: { id: order.supplier.id } })"
-                        >{{ order.supplier.name }}</span>
+                        <TheLink @click="router.push({ name: 'supplier-info', params: { id: order.supplier.id } })">
+                            {{ order.supplier.name }}
+                        </TheLink>
                     </div>
 
                     <div class="order-info-view__meta-row">
@@ -129,6 +126,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import { APICall } from '@/service/api/api'
 import type { OrderDetail } from '@/components/warehouse/orders/orders-models'
+import TheLink from '@/components/base/TheLink.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -227,16 +225,6 @@ onMounted(() => fetchOrder())
         &--pending { background: #fff3cd; color: #856404; border: 1px solid #856404; }
         &--received { background: #d4edda; color: #256236; border: 1px solid #256236; }
         &--cancelled { background: #f5c6cb; color: #721c24; border: 1px solid #721c24; }
-    }
-
-    .order-info-view__link {
-        cursor: pointer;
-        color: #2d5aa0;
-        text-decoration: underline;
-
-        &:hover {
-            color: #1a3d7a;
-        }
     }
 
     .order-info-view__text {

@@ -199,7 +199,7 @@ onMounted(() => fetchOrder())
     }
 
     .receive-order-form {
-        max-width: 700px;
+        max-width: 600px;
         width: 100%;
     }
 
@@ -237,7 +237,7 @@ onMounted(() => fetchOrder())
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         flex-wrap: wrap;
         gap: 10px;
         width: 100%;

@@ -44,13 +44,12 @@
                                 <span class="create-order-form__product-unit">{{ item.unitAbbreviation }}</span>
                             </div>
 
-                            <button
-                                type="button"
+                            <span
                                 class="create-order-form__product-remove"
                                 @click="removeProduct(index)"
                             >
-                                ✕
-                            </button>
+                                ×
+                            </span>
                         </div>
                     </div>
                 </template>
@@ -255,7 +254,6 @@
 
     .create-order-form__product-name {
         flex: 1;
-        font-size: 13px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -268,7 +266,7 @@
         flex-shrink: 0;
     }
 
-    .create-order-form__quantity-input {
+    input.create-order-form__quantity-input {
         width: 80px;
         height: 28px;
         border-radius: 3px;
@@ -277,7 +275,6 @@
         background-color: #fff;
         color: #1a1a1a;
         outline: none;
-        font-size: 13px;
 
         box-shadow:
             inset 0 1px 3px rgba(0, 0, 0, 0.15),
@@ -292,23 +289,17 @@
     }
 
     .create-order-form__product-unit {
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.5);
         min-width: 24px;
     }
 
     .create-order-form__product-remove {
-        flex-shrink: 0;
-        background: none;
-        border: none;
         cursor: pointer;
-        color: rgba(0, 0, 0, 0.4);
-        font-size: 12px;
-        padding: 2px 4px;
+        font-size: 20px;
         line-height: 1;
+        color: #2d5aa0;
 
         &:hover {
-            color: rgba(180, 40, 40, 0.8);
+            color: #c0392b;
         }
     }
 
