@@ -62,6 +62,17 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.ADMIN ]
     }
   },
+  // Notifications
+  {
+    path: "/notifications",
+    name: "notifications",
+    component: () => import("@/views/notifications/NotificationsView.vue")
+  },
+  {
+    path: "/notifications/:id",
+    name: "notification-info",
+    component: () => import("@/views/notifications/NotificationInfoView.vue")
+  },
   // Recipes
   {
     path: "/recipes",
