@@ -2,6 +2,8 @@ import { LoginRequest, LoginResponse, RefreshResponse, User } from "@/store/auth
 import { APICall} from "@/service/api/api";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { getToken } from "firebase/messaging";
+import { messaging } from "@/lib/firebase";
 
 export const useAuth = defineStore("auth", () => {
     const storedUser = localStorage.getItem('authUser');
@@ -24,7 +26,8 @@ export const useAuth = defineStore("auth", () => {
         localStorage.setItem('authRefreshToken', refreshToken.value);
         localStorage.setItem('authUser', JSON.stringify(user.value));
 
-        console.log(response);
+        await registerFcmToken();
+
         if(response.passwordChangeRequired) {
             passwordChangeRequired.value = true;
             localStorage.setItem('passwordChangeRequired', 'true');
@@ -71,6 +74,19 @@ export const useAuth = defineStore("auth", () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('authRefreshToken');
         localStorage.removeItem('authUser');
+    }
+
+    async function registerFcmToken(): Promise<void> {
+        try {
+            const permission = await Notification.requestPermission();
+            if (permission !== 'granted') return;
+
+            const fcmToken = await getToken(messaging, {
+                vapidKey: process.env.VUE_APP_FIREBASE_VAPID_KEY
+            });
+
+            await new APICall<void>('notifications/register-device', 'POST', { token: fcmToken }).execute();
+        } catch {}
     }
 
     function markPasswordChanged() {

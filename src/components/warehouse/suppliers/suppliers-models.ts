@@ -28,6 +28,11 @@ export interface SupplierProduct {
     minOrderQuantity: number
 }
 
+export interface SupplierProductInfo {
+    product: SupplierProduct
+    supplierName: string
+}
+
 export interface SupplierProductsPage {
     products: SupplierProduct[]
     totalElements: number

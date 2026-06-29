@@ -18,7 +18,7 @@
                         </span>
                     </p>
                 </template>
-                <template v-else>{{ displayTitle }}</template>
+                <template v-else>{{ displayTitle }} - Edited</template>
             </TheTitle>
 
             <div class="edit-log-info__header-meta">

@@ -12,7 +12,6 @@
 
         <div class="nav-sidebar__content">
             <NavItem
-                v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
                 icon-src="/images/icons/user.png"
                 link="/users"
                 :icon-styles="[ 'nav-item__icon--users' ]"
@@ -36,15 +35,29 @@
                 Units
             </NavItem>
             <NavItemExpandable
-                v-if="auth.user?.hasRoles([ Role.CHEF, Role.LINE_COOK ])"
+                v-if="auth.user?.hasRoles([ Role.KITCHEN_STAFF, Role.CHEF, Role.LINE_COOK, Role.MANAGER ])"
                 icon-src="/images/icons/recipes.png"
                 :icon-styles="[ 'nav-item__icon--recipes' ]"
             >
                 Recipes
                 <template #submenu>
-                    <NavSubItem link="/recipes">All Recipes</NavSubItem>
-                    <NavSubItem link="/recipes/categories">Recipe Categories</NavSubItem>
-                    <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
+                    <NavSubItem 
+                        link="/recipes"
+                    >
+                        All Recipes
+                    </NavSubItem>
+                    <NavSubItem 
+                        link="/recipes/categories"
+                        v-if="auth.user?.hasRoles([ Role.CHEF ])"
+                    >
+                        Recipe Categories
+                    </NavSubItem>
+                    <NavSubItem 
+                        link="/recipes/ingredient-categories"
+                        v-if="auth.user?.hasRoles([ Role.CHEF ])"
+                    >
+                        Ingredient Categories
+                    </NavSubItem>
                 </template>
             </NavItemExpandable>
             <NavItemExpandable
@@ -60,6 +73,18 @@
                     <NavSubItem link="/warehouse/suppliers">Suppliers</NavSubItem>
                     <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
                     <NavSubItem link="/warehouse/loss-reasons">Loss reasons</NavSubItem>
+                </template>
+            </NavItemExpandable>
+            <NavItemExpandable
+                v-if="auth.user?.hasRoles([ Role.WAREHOUSE_MANAGER, Role.MANAGER ])"
+                icon-src="/images/icons/reports.png"
+                :icon-styles="[ 'nav-item__icon--reports' ]"
+            >
+                Reports
+                <template #submenu>
+                    <NavSubItem link="/reports/expenses">Expenses</NavSubItem>
+                    <NavSubItem link="/reports/inventory-loss">Inventory Loss</NavSubItem>
+                    <NavSubItem link="/reports/top-ordered-products">Top Products</NavSubItem>
                 </template>
             </NavItemExpandable>
         </div>
@@ -169,6 +194,11 @@
         &--warehouse {
             height: 12px;
             width: 12px;
+        }
+
+        &--reports {
+            height: 14px;
+            width: 14px;
         }
     }
 </style>

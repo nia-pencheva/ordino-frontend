@@ -3,13 +3,6 @@
         v-if="category !== undefined"
         class="recipe-ingredient-category-detail"
     >
-        <TheButton
-            @click="router.back()" 
-            class="recipe-ingredient-category-detail__back-button"
-        >
-            <i class="recipe-ingredient-category-detail__back-button__icon"></i>
-        </TheButton>
-
         <TheTitle>{{ category.category }}</TheTitle>
 
         <!-- Non-leaf -->
@@ -221,25 +214,6 @@ import { useNotFound } from '@/store/not-found/not-found';
         flex-direction: column;
         width: 100%;
         height: 100%;
-    }
-
-    .recipe-ingredient-category-detail__back-button {
-        width: 24px;
-        height: 24px;
-        margin: 20px 0px;
-        font-size: 18px;
-
-        @include desktop() {
-            display: none
-        }
-    }
-
-    .recipe-ingredient-category-detail__back-button__icon {
-        @include arrow-left(black, 2px);
-
-        position: relative;
-        bottom: 1px;
-        left: 2px;
     }
 
     .recipe-ingredient-category-detail__toolbar {

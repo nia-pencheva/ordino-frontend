@@ -5,7 +5,7 @@
         </div>
 
         <template v-else-if="entry">
-            <TheTitle>Warehouse batch event #{{ entry.id }}</TheTitle>
+            <TheTitle>Warehouse batch event #{{ entry.id }} - <span style="text-transform: capitalize;">{{ entry.eventType.toLowerCase() }}</span></TheTitle>
 
             <div class="stock-log-info__header-meta">
                 <span class="stock-log-info__header-time">{{ formatDateTime(entry.createdAt) }}</span>

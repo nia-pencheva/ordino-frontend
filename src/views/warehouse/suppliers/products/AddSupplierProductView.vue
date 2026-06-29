@@ -7,7 +7,7 @@
             :submitting="submitting"
             :validation-errors="validationErrors"
             @submit="handleSubmit"
-            @cancel="router.push({ name: 'supplier-addable-products', params: { supplierId: route.params.id } })"
+            @cancel="router.push({ name: 'supplier-info', params: { supplierId: route.params.id } })"
         />
     </TheLayout>
 </template>

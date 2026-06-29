@@ -8,7 +8,7 @@
         </div>
 
         <template v-else>
-            <TheTitle>{{ warehouseProduct.productName }}</TheTitle>
+            <TheTitle>Warehouse product - {{ warehouseProduct.productName }}</TheTitle>
 
             <div class="warehouse-product-info-view__actions-toolbar">
                 <TheButton

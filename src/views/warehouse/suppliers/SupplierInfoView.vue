@@ -5,7 +5,7 @@
         </div>
 
         <template v-else>
-            <TheTitle>{{ supplier.name }}</TheTitle>
+            <TheTitle>Supplier - {{ supplier.name }}</TheTitle>
 
             <div class="supplier-info-view__actions-toolbar">
                 <TheButton

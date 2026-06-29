@@ -1,7 +1,7 @@
 <template>
     <aside class="recipe-ingredient-categories-sidebar">
             <div class="recipe-ingredient-categories-sidebar__header">
-            <span style="font-weight: bold;">Ingredient Categories</span>
+            <span style="font-weight: bold;">Recipe Ingredient Categories</span>
 
             <TheButton
                 class="recipe-ingredient-categories-sidebar__add-button"

@@ -1,3 +1,9 @@
+export class APIHandledError extends Error {
+    constructor() {
+        super('API error was already handled');
+    }
+}
+
 export class UnprocessableContentError {
     errors: ValidationError[];
 

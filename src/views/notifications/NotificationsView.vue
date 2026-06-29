@@ -67,6 +67,7 @@
     import { NotificationsPage } from '@/components/notifications/notifications-models';
     import { APICall } from '@/service/api/api';
     import { useAuth } from '@/store/auth/auth';
+    import { useNotifications } from '@/store/notifications/notifications';
 
     import TheLayout from '@/components/layout/TheLayout.vue';
     import TheTitle from '@/components/layout/TheTitle.vue';
@@ -89,6 +90,7 @@
     });
 
     async function fetchNotifications() {
+        console.log("fetching fucking notifications")
         notificationsPage.value = await (new APICall<NotificationsPage>(
             `notifications/${auth.user!.id}?read=${read.value}&page=${currentPage.value}`
         )).execute();
@@ -115,6 +117,13 @@
             minute: '2-digit',
         });
     }
+
+    const notificationsStore = useNotifications();
+
+    watch(() => notificationsStore.receivedCount, async () => {
+        console.log(notificationsStore.receivedCount, read.value)
+        if (!read.value) await fetchNotifications();
+    });
 
     onMounted(async () => {
         await fetchNotifications();

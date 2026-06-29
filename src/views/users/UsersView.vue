@@ -18,6 +18,7 @@
                 />
 
                 <TheButton
+                    v-if="authStore.user?.hasRoles([ Role.ADMIN ])"
                     @click="router.push('/users/add')"
                     class="users-view__add-button"
                 >
@@ -57,10 +58,11 @@
 </template>
 
 <script setup lang="ts">
-    import { computed, onMounted, ref, watch } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
     import router from '@/router';
-    import { User, UserRole, UsersPage } from '@/components/users/users-models';
+    import { Role, UserRole, UsersPage } from '@/components/users/users-models';
     import { APICall } from '@/service/api/api';
+    import { useAuth } from '@/store/auth/auth';
 
     import TheSpinner from '@/components/base/TheSpinner.vue';
     import TheLayout from '@/components/layout/TheLayout.vue';
@@ -70,6 +72,8 @@
     import TheSearchbar from '@/components/base/TheSearchbar.vue';
     import ThePager from '@/components/base/ThePager.vue';
     import TheSelect, { type SelectOption } from '@/components/base/TheSelect.vue';
+
+    const authStore = useAuth();
 
     const pageSize = 10;
 

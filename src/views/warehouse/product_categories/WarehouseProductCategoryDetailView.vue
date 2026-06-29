@@ -3,13 +3,6 @@
         v-if="category !== undefined"
         class="warehouse-product-category-detail"
     >
-        <TheButton
-            @click="router.back()"
-            class="warehouse-product-category-detail__back-button"
-        >
-            <i class="warehouse-product-category-detail__back-button__icon"></i>
-        </TheButton>
-
         <TheTitle>{{ category.category }}</TheTitle>
 
         <!-- Non-leaf -->
@@ -221,25 +214,6 @@
         flex-direction: column;
         width: 100%;
         height: 100%;
-    }
-
-    .warehouse-product-category-detail__back-button {
-        width: 24px;
-        height: 24px;
-        margin: 20px 0px;
-        font-size: 18px;
-
-        @include desktop() {
-            display: none
-        }
-    }
-
-    .warehouse-product-category-detail__back-button__icon {
-        @include arrow-left(black, 2px);
-
-        position: relative;
-        bottom: 1px;
-        left: 2px;
     }
 
     .warehouse-product-category-detail__toolbar {

@@ -25,16 +25,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
-    component: () => import("@/views/HomeView.vue"),
+    redirect: to => { return { name: 'current-user' } }
   },
   // Users
   {
     path: "/users",
     name: "users",
-    component: () => import("@/views/users/UsersView.vue"),
-    meta: {
-      roles: [ Role.ADMIN ]
-    }
+    component: () => import("@/views/users/UsersView.vue")
   },
   {
     path: "/current-user",
@@ -167,7 +164,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "recipe-ingredient-categories",
     component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoriesView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
     children: [
       {
@@ -182,7 +179,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
@@ -190,7 +187,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-subcategory",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
@@ -198,15 +195,15 @@ const routes: Array<RouteRecordRaw> = [
     name: "edit-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/EditRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
-    path: "/recipes/ingredient-catgories/:id/move",
+    path: "/recipes/ingredient-categories/:id/move",
     name: "move-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/MoveRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     }
   },
   {
@@ -214,7 +211,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-category-product",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryProductView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     }
   },
   // Products
@@ -570,6 +567,39 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Reports
+  {
+    path: "/reports",
+    name: "reports",
+    component: () => import("@/views/reports/ReportsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/expenses",
+    name: "expenses-report",
+    component: () => import("@/views/reports/ExpensesReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/inventory-loss",
+    name: "inventory-loss-report",
+    component: () => import("@/views/reports/InventoryLossReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/top-ordered-products",
+    name: "top-ordered-products-report",
+    component: () => import("@/views/reports/TopOrderedProductsReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",
@@ -591,7 +621,7 @@ router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: 
   else if(to.meta.guest && auth.isAuthenticated) next({ name: 'home' });
   else if (auth.passwordChangeRequired && to.name !== 'change-password') next({ name: 'change-password' });
   else if (to.meta.passwordRequiresChange && !auth.passwordChangeRequired) next({ name: 'home' });
-  else if(to.meta.roles && !auth.user?.hasRoles(to.meta.roles as Role[])) next({ name: 'home' });
+  else if(to.meta.roles && !auth.user?.hasRoles(to.meta.roles as Role[])) useNotFound().show();
   else next();
 });
 

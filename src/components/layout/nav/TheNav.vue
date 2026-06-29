@@ -7,13 +7,13 @@
             >
                 {{ auth.user?.name }}
             </RouterLink>
-            <RouterLink 
+            <RouterLink
                 :to="{ name: 'notifications' }"
-                class="the-nav__notifications-link"  
+                class="the-nav__notifications-link"
             >
-                <img 
-                    src="/images/icons/notifications.png" 
-                    class="the-nav__notifications-icon"    
+                <img
+                    :src="notifications.hasUnread ? '/images/icons/notifications-unread.png' : '/images/icons/notifications.png'"
+                    class="the-nav__notifications-icon"
                 />
             </RouterLink>
             <TheButton
@@ -27,13 +27,21 @@
 </template>
 
 <script setup lang="ts">
-    import { useAuth } from '@/store/auth/auth';
+    import { onMounted, onUnmounted } from 'vue';
 
     import TheButton from '../../base/TheButton.vue';
 
+    import { useAuth } from '@/store/auth/auth';
+    import { useNotifications } from '@/store/notifications/notifications';
+
     const auth = useAuth();
+    const notifications = useNotifications();
 
     const emit = defineEmits([ "logging-out" ]);
+
+    onMounted(() => {
+        notifications.fetchUnreadStatus()
+    });
 </script>
 
 <style lang="scss">

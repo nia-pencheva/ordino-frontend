@@ -4,7 +4,7 @@
             id="price"
             :errors="validationErrors?.getByField('price')"
         >
-            <template #label>Price</template>
+            <template #label>Price ({{ currency }})</template>
             <template #default="defaultProps">
                 <NumberInput
                     :id="defaultProps.id"
@@ -19,7 +19,7 @@
             id="min-order-quantity"
             :errors="validationErrors?.getByField('minOrderQuantity')"
         >
-            <template #label>Minimum order quantity</template>
+            <template #label>Minimum order quantity ({{ unitAbbreviation }})</template>
             <template #default="defaultProps">
                 <div class="supplier-product-form__quantity-row">
                     <NumberInput
@@ -28,7 +28,6 @@
                         :min="0.001"
                         placeholder="Min. order quantity"
                     />
-                    <span v-if="unitAbbreviation" class="supplier-product-form__unit">{{ unitAbbreviation }}</span>
                 </div>
             </template>
         </FormElement>
@@ -85,6 +84,8 @@
         cancel: []
     }>()
 
+    const currency = process.env.VUE_APP_CURRENCY
+
     const price = ref<number | undefined>(props.initialPrice)
     const minOrderQuantity = ref<number | undefined>(props.initialMinOrderQuantity)
 
@@ -103,12 +104,6 @@
         display: flex;
         align-items: center;
         gap: 8px;
-    }
-
-    .supplier-product-form__unit {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.55);
-        white-space: nowrap;
     }
 
     .supplier-product-form__buttons {
