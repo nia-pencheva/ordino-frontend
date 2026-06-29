@@ -2,7 +2,7 @@ import { useAuth } from "@/store/auth/auth";
 import { useNotFound } from "@/store/not-found/not-found";
 import { HTTPMethod } from "./models/http-methods";
 import router from "@/router";
-import { UnprocessableContentError } from "./models/response-errors";
+import { APIHandledError, UnprocessableContentError } from "./models/response-errors";
 
 export class APICall<TData = unknown> { 
     private response?: TData;
@@ -85,6 +85,7 @@ export class APICall<TData = unknown> {
 
     private handleBadRequest() {
         useNotFound().show();
+        throw new APIHandledError();
     }
 
     private async handleUnauthorized(reason: Response) {
@@ -126,13 +127,13 @@ export class APICall<TData = unknown> {
     private async handleInvalidRefreshToken() {
         await useAuth().logout();
         router.replace('/login');
-        this.response = {} as TData;
+        throw new APIHandledError();
     }
 
     private async handleInvalidToken() {
         await useAuth().logout();
         router.replace("/login");
-        this.response = {} as TData; 
+        throw new APIHandledError();
     }
 
     private async handleForbidden(reason: Response) {
@@ -155,12 +156,13 @@ export class APICall<TData = unknown> {
         else {
             router.replace({ name: "change-password" });
         }
-        
-        this.response = {} as TData;
+
+        throw new APIHandledError();
     }
 
     private handleNotFound() {
         useNotFound().show();
+        throw new APIHandledError();
     }
 
     private async handleUnprocessableContent(reason: Response) {

@@ -25,16 +25,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
-    component: () => import("@/views/HomeView.vue"),
+    redirect: to => { return { name: 'current-user' } }
   },
   // Users
   {
     path: "/users",
     name: "users",
-    component: () => import("@/views/users/UsersView.vue"),
-    meta: {
-      roles: [ Role.ADMIN ]
-    }
+    component: () => import("@/views/users/UsersView.vue")
   },
   {
     path: "/current-user",
@@ -45,9 +42,6 @@ const routes: Array<RouteRecordRaw> = [
     path: "/users/:id",
     name: "user-info",
     component: () => import("@/views/users/UserInfoView.vue"),
-    meta: {
-      roles: [ Role.ADMIN ]
-    }
   },
   {
     path: "/users/add",
@@ -64,6 +58,17 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       roles: [ Role.ADMIN ]
     }
+  },
+  // Notifications
+  {
+    path: "/notifications",
+    name: "notifications",
+    component: () => import("@/views/notifications/NotificationsView.vue")
+  },
+  {
+    path: "/notifications/:id",
+    name: "notification-info",
+    component: () => import("@/views/notifications/NotificationInfoView.vue")
   },
   // Recipes
   {
@@ -159,7 +164,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "recipe-ingredient-categories",
     component: () => import("@/views/recipes/ingredient_categories/RecipeIngredientCategoriesView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
     children: [
       {
@@ -174,7 +179,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
@@ -182,7 +187,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-subcategory",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
@@ -190,15 +195,15 @@ const routes: Array<RouteRecordRaw> = [
     name: "edit-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/EditRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     },
   },
   {
-    path: "/recipes/ingredient-catgories/:id/move",
+    path: "/recipes/ingredient-categories/:id/move",
     name: "move-recipe-ingredient-category",
     component: () => import("@/views/recipes/ingredient_categories/MoveRecipeIngredientCategoryView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     }
   },
   {
@@ -206,7 +211,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "add-recipe-ingredient-category-product",
     component: () => import("@/views/recipes/ingredient_categories/AddRecipeIngredientCategoryProductView.vue"),
     meta: {
-      roles: [ Role.CHEF, Role.LINE_COOK ]
+      roles: [ Role.CHEF ]
     }
   },
   // Products
@@ -446,6 +451,155 @@ const routes: Array<RouteRecordRaw> = [
       roles: [ Role.WAREHOUSE_MANAGER ]
     }
   },
+  // Orders
+  {
+    path: "/warehouse/orders",
+    name: "orders",
+    component: () => import("@/views/warehouse/orders/OrdersView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/orders/:id",
+    name: "order-info",
+    component: () => import("@/views/warehouse/orders/OrderInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/create",
+    name: "create-order",
+    component: () => import("@/views/warehouse/orders/CreateOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+    {
+    path: "/warehouse/orders/:id/receive",
+    name: "receive-order",
+    component: () => import("@/views/warehouse/orders/ReceiveOrderView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Loss Reasons
+  {
+    path: "/warehouse/loss-reasons",
+    name: "loss-reasons",
+    component: () => import("@/views/warehouse/loss_reasons/LossReasonsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/add",
+    name: "add-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/AddLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/loss-reasons/:id/edit",
+    name: "edit-loss-reason",
+    component: () => import("@/views/warehouse/loss_reasons/EditLossReasonView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Stock
+  {
+    path: "/warehouse/stock",
+    name: "stock",
+    component: () => import("@/views/warehouse/stock/StockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId",
+    name: "product-stock",
+    component: () => import("@/views/warehouse/stock/ProductStockView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId",
+    name: "stock-batch",
+    component: () => import("@/views/warehouse/stock/StockBatchView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/mark-used",
+    name: "mark-stock-quantity-used",
+    component: () => import("@/views/warehouse/stock/MarkStockQuantityUsedView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/:productId/:batchId/write-off",
+    name: "write-off-stock-quantity",
+    component: () => import("@/views/warehouse/stock/WriteOffStockQuantityView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Stock log
+  {
+    path: "/warehouse/stock/log",
+    name: "stock-log",
+    component: () => import("@/views/warehouse/stock/log/StockLogView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  {
+    path: "/warehouse/stock/log/:id",
+    name: "stock-log-info",
+    component: () => import("@/views/warehouse/stock/log/StockLogInfoView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER ]
+    }
+  },
+  // Reports
+  {
+    path: "/reports",
+    name: "reports",
+    component: () => import("@/views/reports/ReportsView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/expenses",
+    name: "expenses-report",
+    component: () => import("@/views/reports/ExpensesReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/inventory-loss",
+    name: "inventory-loss-report",
+    component: () => import("@/views/reports/InventoryLossReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
+  {
+    path: "/reports/top-ordered-products",
+    name: "top-ordered-products-report",
+    component: () => import("@/views/reports/TopOrderedProductsReportView.vue"),
+    meta: {
+      roles: [ Role.WAREHOUSE_MANAGER, Role.MANAGER ]
+    }
+  },
   // Not found
   {
     path: "/:pathMatch(.*)*",
@@ -467,7 +621,7 @@ router.beforeEach(function(to: RouteLocationNormalizedGeneric, from: any, next: 
   else if(to.meta.guest && auth.isAuthenticated) next({ name: 'home' });
   else if (auth.passwordChangeRequired && to.name !== 'change-password') next({ name: 'change-password' });
   else if (to.meta.passwordRequiresChange && !auth.passwordChangeRequired) next({ name: 'home' });
-  else if(to.meta.roles && !auth.user?.hasRoles(to.meta.roles as Role[])) next({ name: 'home' });
+  else if(to.meta.roles && !auth.user?.hasRoles(to.meta.roles as Role[])) useNotFound().show();
   else next();
 });
 

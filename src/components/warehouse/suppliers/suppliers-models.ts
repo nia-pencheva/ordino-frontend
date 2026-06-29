@@ -21,10 +21,16 @@ export interface Supplier {
 
 export interface SupplierProduct {
     id: number
+    warehouseProductId: number
     productName: string
     unitAbbreviation: string
     price: number
     minOrderQuantity: number
+}
+
+export interface SupplierProductInfo {
+    product: SupplierProduct
+    supplierName: string
 }
 
 export interface SupplierProductsPage {

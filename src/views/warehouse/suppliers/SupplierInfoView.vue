@@ -5,7 +5,7 @@
         </div>
 
         <template v-else>
-            <TheTitle>{{ supplier.name }}</TheTitle>
+            <TheTitle>Supplier - {{ supplier.name }}</TheTitle>
 
             <div class="supplier-info-view__actions-toolbar">
                 <TheButton
@@ -704,10 +704,6 @@
             inset -1px 0 0 rgba(255, 255, 255, 0.55),
             0 1px 2px rgba(0, 0, 0, 0.20),
             0 1px 0 rgba(255, 255, 255, 0.60);
-    }
-
-    .supplier-info-view__order-id {
-        font-weight: 600;
     }
 
     .supplier-info-view__order-date {

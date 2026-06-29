@@ -25,7 +25,10 @@
             </div>
 
             <template v-else>
-                <template v-if="(productsPage?.totalElements ?? 0) > 0">
+                <div 
+                    v-if="(productsPage?.totalElements ?? 0) > 0"
+                    class="supplier-addable-produts-view__results"    
+                >
                     <div class="supplier-addable-products-view__table">
                         <div
                             v-for="product in productsPage?.products"
@@ -49,7 +52,7 @@
                         @previous="getPreviousPage"
                         @next="getNextPage"
                     />
-                </template>
+                </div>
 
                 <div
                     v-else
@@ -181,6 +184,13 @@
         width: 100%;
         min-height: $tableMinHeight;
         margin-top: 20px;
+    }
+
+    .supplier-addable-produts-view__results {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
     }
 
     .supplier-addable-products-view__table {

@@ -26,7 +26,10 @@
             </div>
         </div>
 
-        <div class="recipes-view__tabs">
+        <div 
+            class="recipes-view__tabs"
+            v-if="authStore.user?.hasRoles([ Role.LINE_COOK, Role.CHEF ])"  
+        >
             <div
                 v-if="showActiveTab"
                 @click="selectMainTab('active')"
@@ -50,8 +53,8 @@
             </div>
         </div>
 
-        <div class="recipes-view__tab__wrapper">
-            <div v-if="mainTab === 'active'" class="recipes-view__subtabs">
+        <div :class="[ 'recipes-view__tab__wrapper', { 'recipes-view__tab__wrapper--line-cook': authStore.user?.hasRoles([ Role.KITCHEN_STAFF, Role.MANAGER ]) }]">
+            <div v-if="authStore.user?.hasRoles([ Role.LINE_COOK, Role.CHEF ]) && mainTab === 'active'" class="recipes-view__subtabs">
                 <div
                     v-for="subtab in visibleActiveSubtabs"
                     :key="subtab.id"
@@ -334,6 +337,12 @@
         clip-path: inset(-10px 0px 1px 1px);
 
         @include glass-gray-shadow();
+    }
+
+    .recipes-view__tab__wrapper--line-cook {
+        clip-path: none;
+        box-shadow: none;
+        padding: none;
     }
 
     .recipes-view__subtabs {

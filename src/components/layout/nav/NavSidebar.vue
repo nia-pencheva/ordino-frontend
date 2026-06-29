@@ -1,6 +1,7 @@
 <template>
     <div 
         :class="[ sidebarOpen ? 'nav-sidebar--open' : 'nav-sidebar--closed' ]"    
+        ref="sidebar"
     >
         <TheButton
             @click="toggleSidebar" 
@@ -11,7 +12,6 @@
 
         <div class="nav-sidebar__content">
             <NavItem
-                v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
                 icon-src="/images/icons/user.png"
                 link="/users"
                 :icon-styles="[ 'nav-item__icon--users' ]"
@@ -35,15 +35,29 @@
                 Units
             </NavItem>
             <NavItemExpandable
-                v-if="auth.user?.hasRoles([ Role.CHEF, Role.LINE_COOK ])"
+                v-if="auth.user?.hasRoles([ Role.KITCHEN_STAFF, Role.CHEF, Role.LINE_COOK, Role.MANAGER ])"
                 icon-src="/images/icons/recipes.png"
                 :icon-styles="[ 'nav-item__icon--recipes' ]"
             >
                 Recipes
                 <template #submenu>
-                    <NavSubItem link="/recipes">All Recipes</NavSubItem>
-                    <NavSubItem link="/recipes/categories">Recipe Categories</NavSubItem>
-                    <NavSubItem link="/recipes/ingredient-categories">Ingredient Categories</NavSubItem>
+                    <NavSubItem 
+                        link="/recipes"
+                    >
+                        All Recipes
+                    </NavSubItem>
+                    <NavSubItem 
+                        link="/recipes/categories"
+                        v-if="auth.user?.hasRoles([ Role.CHEF ])"
+                    >
+                        Recipe Categories
+                    </NavSubItem>
+                    <NavSubItem 
+                        link="/recipes/ingredient-categories"
+                        v-if="auth.user?.hasRoles([ Role.CHEF ])"
+                    >
+                        Ingredient Categories
+                    </NavSubItem>
                 </template>
             </NavItemExpandable>
             <NavItemExpandable
@@ -53,11 +67,24 @@
             >
                 Warehouse
                 <template #submenu>
-                    <NavSubItem link="/warehouse">Stock</NavSubItem>
+                    <NavSubItem link="/warehouse/stock">Stock</NavSubItem>
+                    <NavSubItem link="/warehouse/orders">Orders</NavSubItem>
                     <NavSubItem link="/warehouse/products">Products</NavSubItem>
-                    <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
                     <NavSubItem link="/warehouse/suppliers">Suppliers</NavSubItem>
-                    <NavSubItem link="/warehouse/logs">Logs</NavSubItem>
+                    <NavSubItem link="/warehouse/product-categories">Product Categories</NavSubItem>
+                    <NavSubItem link="/warehouse/loss-reasons">Loss reasons</NavSubItem>
+                </template>
+            </NavItemExpandable>
+            <NavItemExpandable
+                v-if="auth.user?.hasRoles([ Role.WAREHOUSE_MANAGER, Role.MANAGER ])"
+                icon-src="/images/icons/reports.png"
+                :icon-styles="[ 'nav-item__icon--reports' ]"
+            >
+                Reports
+                <template #submenu>
+                    <NavSubItem link="/reports/expenses">Expenses</NavSubItem>
+                    <NavSubItem link="/reports/inventory-loss">Inventory Loss</NavSubItem>
+                    <NavSubItem link="/reports/top-ordered-products">Top Products</NavSubItem>
                 </template>
             </NavItemExpandable>
         </div>
@@ -76,11 +103,17 @@
 
     const auth = useAuth();
 
+    const sidebar = ref<HTMLDivElement | null>(null)
     const sidebarOpen = ref<boolean>(false);
 
     function toggleSidebar() {
         sidebarOpen.value = !sidebarOpen.value;
     }
+
+    document.addEventListener("click", (event: MouseEvent) => {
+        if(sidebar.value?.contains(event.target as Node)) return
+        sidebarOpen.value = false;
+    });
 </script>
 
 <style lang="scss">
@@ -91,7 +124,7 @@
         position: fixed;
         z-index: 1000;
         height: 100vh;
-        width: 160px;
+        width: 190px;
         background-color: $midGray;
         border-right: 1px solid rgba(255, 255, 255, 0.5);
         border-radius: 0px 5px 5px 0px;
@@ -99,7 +132,7 @@
     }
 
     .nav-sidebar--closed {
-        transform: translateX(-125px);
+        transform: translateX(-155px);
     }
 
     .nav-sidebar--open {
@@ -161,6 +194,11 @@
         &--warehouse {
             height: 12px;
             width: 12px;
+        }
+
+        &--reports {
+            height: 14px;
+            width: 14px;
         }
     }
 </style>

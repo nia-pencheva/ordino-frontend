@@ -1,13 +1,6 @@
 <template>
     <TheLayout :content-styles="['add-recipe-ingredient-category-product']">
         <div class="add-recipe-ingredient-category-product__wrapper">
-                <TheButton
-                @click="router.back()" 
-                class="add-recipe-ingredient-category-product__back-button"
-            >
-                <i class="add-recipe-ingredient-category-product__back-button__icon"></i>
-            </TheButton>
-
             <TheTitle>Add ingredient to category {{ route.query.categoryName }}</TheTitle>
 
             <TheSearchbar
@@ -149,21 +142,6 @@
         gap: 20px;
         width: 100%;
         margin-top: 20px;
-    }
-
-    .add-recipe-ingredient-category-product__back-button {
-        width: 24px;
-        height: 24px;
-        font-size: 18px;
-        margin-bottom: 20px;
-    }
-
-    .add-recipe-ingredient-category-product__back-button__icon {
-        @include arrow-left(black, 2px);
-
-        position: relative;
-        bottom: 1px;
-        left: 2px;
     }
 
     .add-recipe-ingredient-category-product__loader {

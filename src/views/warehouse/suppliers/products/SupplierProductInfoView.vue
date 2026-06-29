@@ -5,7 +5,7 @@
         </div>
 
         <template v-else>
-            <TheTitle>{{ supplierProduct.productName }}</TheTitle>
+            <TheTitle>{{ supplierProduct.supplierName }} product - {{ supplierProduct.product.productName }}</TheTitle>
 
             <div class="supplier-product-info-view__actions-toolbar">
                 <TheButton
@@ -28,13 +28,13 @@
                 <SectionTitle>Information</SectionTitle>
 
                 <div class="supplier-product-info-view__meta-row">
-                    <span class="supplier-product-info-view__label">Price</span>
-                    <span>{{ supplierProduct.price }}</span>
+                    <span class="supplier-product-info-view__label">Price per unit</span>
+                    <span>{{ supplierProduct.product.price }} {{ currency }}</span>
                 </div>
 
                 <div class="supplier-product-info-view__meta-row">
                     <span class="supplier-product-info-view__label">Minimum order quantity</span>
-                    <span>{{ supplierProduct.minOrderQuantity }}</span>
+                    <span>{{ supplierProduct.product.minOrderQuantity }} {{ supplierProduct.product.unitAbbreviation }}</span>
                 </div>
             </div>
 
@@ -129,7 +129,8 @@
 
             <DeleteSupplierProductPopup
                 v-if="deletePopupOpen"
-                :supplier-product="supplierProduct"
+                :supplier-name="supplierProduct.supplierName"
+                :supplier-product="supplierProduct.product"
                 :supplier-id="route.params.supplierId as string"
                 @close="deletePopupOpen = false"
                 @deleted="handleDeleted"
@@ -143,7 +144,7 @@
     import { useRoute, useRouter } from 'vue-router'
 
     import { APICall } from '@/service/api/api'
-    import { SupplierProduct, SupplierOrdersPage } from '@/components/warehouse/suppliers/suppliers-models'
+    import { SupplierProductInfo, SupplierOrdersPage } from '@/components/warehouse/suppliers/suppliers-models'
 
     import TheLayout from '@/components/layout/TheLayout.vue'
     import TheTitle from '@/components/layout/TheTitle.vue'
@@ -175,8 +176,9 @@
     const router = useRouter()
 
     const pageSize = 10
+    const currency = process.env.VUE_APP_CURRENCY
 
-    const supplierProduct = ref<SupplierProduct | undefined>(undefined)
+    const supplierProduct = ref<SupplierProductInfo | undefined>(undefined)
     const deletePopupOpen = ref<boolean>(false)
 
     const ordersPage = ref<SupplierOrdersPage | undefined>(undefined)
@@ -196,7 +198,7 @@
     })
 
     async function fetchSupplierProduct() {
-        supplierProduct.value = await new APICall<SupplierProduct>(
+        supplierProduct.value = await new APICall<SupplierProductInfo>(
             `suppliers/${route.params.supplierId}/products/${route.params.supplierProductId}`
         ).execute()
     }
@@ -442,10 +444,6 @@
             inset -1px 0 0 rgba(255, 255, 255, 0.55),
             0 1px 2px rgba(0, 0, 0, 0.20),
             0 1px 0 rgba(255, 255, 255, 0.60);
-    }
-
-    .supplier-product-info-view__order-id {
-        font-weight: 600;
     }
 
     .supplier-product-info-view__order-date {

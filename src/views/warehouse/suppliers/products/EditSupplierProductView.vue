@@ -5,13 +5,13 @@
         </div>
 
         <template v-else>
-            <TheTitle>Edit {{ supplierProduct.productName }}</TheTitle>
+            <TheTitle>Edit {{ supplierProduct.supplierName }} product - {{ supplierProduct.product.productName }}</TheTitle>
 
             <SupplierProductForm
                 mode="edit"
-                :initial-price="supplierProduct.price"
-                :initial-min-order-quantity="supplierProduct.minOrderQuantity"
-                :unit-abbreviation="supplierProduct.unitAbbreviation"
+                :initial-price="supplierProduct.product.price"
+                :initial-min-order-quantity="supplierProduct.product.minOrderQuantity"
+                :unit-abbreviation="supplierProduct.product.unitAbbreviation"
                 :submitting="submitting"
                 :validation-errors="validationErrors"
                 @submit="handleSubmit"
@@ -32,12 +32,12 @@
     import TheSpinner from '@/components/base/TheSpinner.vue'
     import SupplierProductForm from '@/components/warehouse/suppliers/SupplierProductForm.vue'
 
-    import { SupplierProduct } from '@/components/warehouse/suppliers/suppliers-models'
+    import { SupplierProductInfo } from '@/components/warehouse/suppliers/suppliers-models'
 
     const route = useRoute()
     const router = useRouter()
 
-    const supplierProduct = ref<SupplierProduct | undefined>(undefined)
+    const supplierProduct = ref<SupplierProductInfo | undefined>(undefined)
     const submitting = ref<boolean>(false)
     const validationErrors = ref<UnprocessableContentError | undefined>(undefined)
 
@@ -62,7 +62,7 @@
     }
 
     onMounted(async () => {
-        supplierProduct.value = await new APICall<SupplierProduct>(
+        supplierProduct.value = await new APICall<SupplierProductInfo>(
             `suppliers/${route.params.supplierId}/products/${route.params.supplierProductId}`
         ).execute()
     })

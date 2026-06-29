@@ -1,7 +1,9 @@
 <template>
     <div class="nav-item-expandable">
         <button class="nav-item nav-item-expandable__trigger" @click="toggle">
-            <img :class="[ ...iconStyles ?? '' ]" :src="iconSrc" />
+            <div class="nav-item__icon__wrapper">
+                <img :class="[ ...iconStyles ?? '' ]" :src="iconSrc" />
+            </div>
             <span><slot></slot></span>
             <i :class="['nav-item-expandable__arrow', { 'nav-item-expandable__arrow--open': isOpen }]"></i>
         </button>

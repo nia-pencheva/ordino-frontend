@@ -369,6 +369,7 @@ async function handleSave() {
         if (e instanceof UnprocessableContentError) {
             validationErrors.value = e
         }
+        else throw e;
     } finally {
         submitting.value = false;
     }

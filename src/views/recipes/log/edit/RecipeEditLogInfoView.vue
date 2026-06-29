@@ -18,12 +18,14 @@
                         </span>
                     </p>
                 </template>
-                <template v-else>{{ displayTitle }}</template>
+                <template v-else>{{ displayTitle }} - Edited</template>
             </TheTitle>
 
             <div class="edit-log-info__header-meta">
                 <span class="edit-log-info__header-time">{{ formatDateTime(entry.createdAt) }}</span>
-                <span>{{ entry.userFullName }}</span>
+                <TheLink @click="router.push({ name: 'user-info', params: { id: entry.userId } })">
+                    {{ entry.userFullName }}
+                </TheLink>
             </div>
 
             <div class="edit-log-info__wrapper">
@@ -195,6 +197,8 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import TheTitle from '@/components/layout/TheTitle.vue'
 import TheSpinner from '@/components/base/TheSpinner.vue'
 import SectionTitle from '@/components/base/SectionTitle.vue'
+import TheLink from '@/components/base/TheLink.vue'
+import router from '@/router'
 
 interface SnapshotProduct {
     productName: string

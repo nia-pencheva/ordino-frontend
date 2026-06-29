@@ -8,9 +8,12 @@
         </div>
 
         <template v-else>
-            <TheTitle>{{ user.fullName }}</TheTitle>
+            <TheTitle>User {{ user.fullName }}</TheTitle>
 
-            <div class="user-info__acitons-toolbar">
+            <div
+                v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
+                class="user-info__acitons-toolbar"
+            >
                 <TheButton
                     class="user-info__actions-toolbar__button"
                     @click="router.push({ name: 'edit-user', params: { id: user.id } })"
@@ -37,25 +40,28 @@
             <div>
                 <SectionTitle>Information</SectionTitle>
 
-                <p class="user-info__info-row">
-                    <b>Username</b>: 
-                    {{ user.username }}
-                </p>
-                <p class="user-info__info-row">
-                    <b>Email</b>: 
-                    {{ user.email }}
-                </p>
-                <p class="user-info__info-row">
-                    <b>Phone Number</b>: 
-                    {{ user.phoneNumber }}
-                </p>
-                <p 
-                    class="user-info__info-row" 
+                <div 
+                    v-if="auth.user?.hasRoles([ Role.ADMIN ])" 
+                    class="user-info-info-view__meta-row"
+                >
+                    <span class="user-info-info-view__label">Username</span>
+                    <span>{{ user.username }}</span>
+                </div>
+                <div class="user-info-info-view__meta-row">
+                    <span class="user-info-info-view__label">Email</span>
+                    <span>{{ user.email }}</span>
+                </div>
+                <div class="user-info-info-view__meta-row">
+                    <span class="user-info-info-view__label">Phone Number</span>
+                    <span>{{ user.phoneNumber }}</span>
+                </div>
+                <div
+                    class="user-info-info-view__meta-row" 
                     style="text-transform: capitalize;"
                 >
-                    <b>Roles</b>: 
-                    {{ user.roles.join(", ") }}
-                </p>
+                    <span class="user-info-info-view__label">Roles</span>
+                    <span>{{ user.roles.join(", ") }}</span>
+                </div>
             </div>
 
             <ResetPasswordPopup
@@ -86,7 +92,7 @@ import TheSpinner from '@/components/base/TheSpinner.vue';
 import TheTitle from '@/components/layout/TheTitle.vue';
 import TheButton from '@/components/base/TheButton.vue';
 import router from '@/router';
-import { User } from '@/components/users/users-models';
+import { Role, User } from '@/components/users/users-models';
 import ResetPasswordPopup from '@/components/users/ResetPasswordPopup.vue';
 import DeleteUserPopup from '@/components/users/DeleteUserPopup.vue';
 import { useAuth } from '@/store/auth/auth';
@@ -131,7 +137,18 @@ import SectionTitle from '@/components/base/SectionTitle.vue';
         padding: 4px;
     }
 
-    .user-info__info-row {
-        margin-bottom: 8px;
+    .user-info-info-view__meta-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .user-info-info-view__label {
+        font-weight: bold;
+        width: 100%;
+        flex-shrink: 0;
+        color: black;
     }
 </style>

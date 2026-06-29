@@ -216,5 +216,6 @@
 
     .the-button--with-tooltip {
         position: relative;
+        z-index: 999;
     }
 </style>

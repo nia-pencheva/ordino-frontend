@@ -134,28 +134,28 @@
                                 </span>
                             </div>
                             <span v-else class="recipe-info-view__placeholder">No categories</span>
+                            <ul v-if="validationErrors?.getByField('recipeCategories')?.length" class="recipe-info-view__field-errors">
+                                <li v-for="error in validationErrors?.getByField('recipeCategories')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
+                            </ul>
                         </div>
-                        <ul v-if="validationErrors?.getByField('recipeCategories')?.length" class="recipe-info-view__field-errors">
-                            <li v-for="error in validationErrors?.getByField('recipeCategories')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
-                        </ul>
 
                         <div class="recipe-info-view__meta-row">
                             <span class="recipe-info-view__label">Prep time</span>
                             <span v-if="recipe.preparationTime != null">{{ recipe.preparationTime }} min</span>
                             <span v-else class="recipe-info-view__placeholder">Not specified</span>
+                            <ul v-if="validationErrors?.getByField('preparationTime')?.length" class="recipe-info-view__field-errors">
+                                <li v-for="error in validationErrors?.getByField('preparationTime')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
+                            </ul>
                         </div>
-                        <ul v-if="validationErrors?.getByField('preparationTime')?.length" class="recipe-info-view__field-errors">
-                            <li v-for="error in validationErrors?.getByField('preparationTime')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
-                        </ul>
 
                         <div class="recipe-info-view__meta-row">
                             <span class="recipe-info-view__label">Servings</span>
                             <span v-if="recipe.servings != null">{{ recipe.servings }}</span>
                             <span v-else class="recipe-info-view__placeholder">Not specified</span>
+                            <ul v-if="validationErrors?.getByField('servings')?.length" class="recipe-info-view__field-errors">
+                                <li v-for="error in validationErrors?.getByField('servings')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
+                            </ul>
                         </div>
-                        <ul v-if="validationErrors?.getByField('servings')?.length" class="recipe-info-view__field-errors">
-                            <li v-for="error in validationErrors?.getByField('servings')?.slice().sort((a, b) => a.message.localeCompare(b.message))">{{ error.message }}</li>
-                        </ul>
 
                         <SectionTitle>Description</SectionTitle>
                         <p v-if="recipe.description" class="recipe-info-view__text">{{ recipe.description }}</p>
@@ -330,7 +330,7 @@ const isChef = computed(() => authStore.user?.hasRoles([Role.CHEF]) ?? false)
 const showEdit = computed(() => {
     if (!recipe.value) return false
     const s = recipe.value.status
-    if (!recipe.value.createdByCurrentUser) return false
+    if (!recipe.value.createdByCurrentUser) return (isChef.value && s === 'APPROVED');
     if (isLineCook.value) return s === 'DRAFT' || s === 'RETURNED_FOR_REVISION'
     if (isChef.value) return s === 'DRAFT' || s === 'APPROVED'
     return false
@@ -565,7 +565,9 @@ onMounted(() => fetchRecipe())
 
     .recipe-info-view__meta-row {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
         gap: 6px;
         margin-bottom: 20px;
         flex-wrap: wrap;

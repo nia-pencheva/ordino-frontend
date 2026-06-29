@@ -2,7 +2,7 @@
     <div class="delete-supplier-product-popup__overlay">
         <TheWindow class="delete-supplier-product-popup__window">
             <div class="delete-supplier-product-popup__content">
-                <p>Delete <b>{{ props.supplierProduct?.productName }}</b> from this supplier's catalog?</p>
+                <p>Delete <b>{{ supplierProduct?.productName }}</b> from {{ supplierName }}'s catalog?</p>
 
                 <div class="delete-supplier-product-popup__buttons">
                     <TheButton @click="handleConfirm">Confirm</TheButton>
@@ -21,6 +21,7 @@
     import TheButton from '@/components/base/TheButton.vue'
 
     interface Props {
+        supplierName?: string
         supplierProduct?: SupplierProduct
         supplierId?: number | string
     }
